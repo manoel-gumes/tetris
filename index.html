@@ -212,15 +212,9 @@
 
     // Dados atuais do jogador
     var nickname,
-        password,
-        finalScore;
+        password;
     // Array no servidor:
-    var usersData = [{nick:'Ana', password:'123', score:10},
-                    {nick:'Bernardo', password:'123', score:20},
-                    {nick:'Carlos', password:'123', score:30},
-                    {nick:'Daniela', password:'123', score:40},
-                    {nick:'Erick', password:'123', score:50},
-                    {nick:'Fábio', password:'123', score:60}];
+    var usersData = [];
 
     var songIsPlaying = false;
 
@@ -302,7 +296,7 @@
     // GAME LOOP
     //-------------------------------------------------------------------------
 
-    function run() {
+    async function run() {
 
       //showStats(); // initialize FPS counter
       addEvents(); // attach keydown and resize events
@@ -321,7 +315,7 @@
       reset();  // reset the per-game variables
       frame();  // start the first frame
 
-      updateRanking();
+      await fetchScore()
     }
 
     function swipedetect(el, callback){
@@ -440,16 +434,50 @@
     }
 
     function checkPassword(user, password) {
-      fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/login', {
+      return fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: '',
-      })
+        body: JSON.stringify({
+          user: user,
+          password: password
+        }),
+      });
     }
 
-    function tryToEnter(ev){
+    async function fetchScore() {
+      const score = await (await fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/score')).json();
+
+      usersData = Object.keys(score).map(key => {
+        return {
+        nick: score[key].user,
+        score: score[key].score
+      }});
+      updateRanking()
+    }
+
+    async function saveScore(user, password, score) {
+      const resp = await fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user: user,
+          password: password,
+          score: score
+        }),
+      });
+
+      if (resp.status != 200) {
+        alert('There was an error on sending this score.')
+      }
+    }
+
+    async function tryToEnter(ev){
+      ev.preventDefault()
+
       nickname = document.getElementById("nickname").value;
       password = document.getElementById("password").value;
       if(nickname == ""){
@@ -461,25 +489,21 @@
         return;
       }
 
-      obj = usersData.find(x => x.nick === nickname);
-      if(obj == undefined){
+      const resp = await checkPassword(nickname, password);
+      await fetchScore()
+
+      if (resp.status == 200){
         usersData.push({nick: nickname, password: password, score: 0})
         var player_name = document.getElementById('player');
         player_name.innerHTML = nickname;
         ev.preventDefault();
         play();
       }
-      else{
-        if(obj.password != password){
-          alert('Invalid password')
+      else {
+        const error = await resp.text()
+        if (error == 'incorrect password') {
+          alert('Invalid password');
           return;
-        }
-        else{
-          finalScore = obj.score;
-          var player_name = document.getElementById('player');
-          player_name.innerHTML = nickname;
-          ev.preventDefault();
-          play();
         }
       }
     }
@@ -509,19 +533,26 @@
     // GAME LOGIC
     //-------------------------------------------------------------------------
 
-    function saveFinalScore(){
-      if(score > finalScore || finalScore == undefined){
-        usersData.find(x => x.nick === nickname).score = score;
-        finalScore = score;
+    async function saveFinalScore(){
+      await saveScore(nickname, password, score)
+      await fetchScore()
+      setVisualScore();
+    }
+
+    function saveIntermediaryScore() {
+      const user = usersData.find(x => x.nick === nickname)
+      if(score > user.score){
+        user.score = score
+        updateRanking()
       }
     }
 
     function play() { hide('login'); reset(); playing = true; }
-    function lose() { saveFinalScore(); show('login'); setVisualScore(); playing = false;}
+    function lose() { saveFinalScore(); show('login'); playing = false;}
 
     function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
     function setScore(n)            { score = n; setVisualScore(n);  }
-    function addScore(n)            { score = score + n; saveFinalScore(); updateRanking(); }
+    function addScore(n)            { score = score + n; saveIntermediaryScore(); updateRanking(); }
     function clearScore()           { setScore(0); }
     function clearRows()            { setRows(0); }
     function setRows(n)             { rows = n; step = Math.max(speed.min, speed.start - (speed.decrement*rows)); invalidateRows(); }
