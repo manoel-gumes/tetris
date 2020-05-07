@@ -13,7 +13,7 @@
     #menu p a { text-decoration: none; color: rgb(0, 20, 47); }
     #upcoming { display: block; margin: 0 auto; background-color: rgba(0, 20, 47); background-size: 100%; background-image: url(background2.png);}
     #score    { color: rgb(248, 24, 97); font-weight: bold; vertical-align: middle;}
-    
+
     #login    { display: flex; justify-content: center; align-items: center; text-align: center;
               color: rgb(248, 24, 97); position: absolute; background-color: rgba(0, 20, 47,0.9);}
 
@@ -36,7 +36,7 @@
               font-size: 12px;
               font-family: Impact, sans-serif;
               border-radius: 4px;}
-    
+
     #btnWpp {display: block;
               background: transparent;
               margin-left: auto;
@@ -54,10 +54,10 @@
 
     input     { margin: 0 0; position: relative; top: -1em;}
     #panel { background-color: #F8F8F8; display: flex; justify-content: space-between; flex-direction: column;}
-    
+
     #player{width: 40%; display: inline-block; text-align: center; padding: 15% 0 15% 0;}
     #score{width: 40%; display: inline-block;text-align: center; padding: 15% 0 15% 0;}
-    
+
     #ranking{padding-top: 20%; height: 70%; background-image: url("background1.png"); background-size: 100% 100%;}
 
     #player1{width: 40%; display: inline-block; text-align: center;}
@@ -65,7 +65,7 @@
     #player3{width: 40%; display: inline-block; text-align: center; padding: 1% 0 1% 0;}
     #player4{width: 40%; display: inline-block; text-align: center; padding: 1% 0 1% 0;}
     #player5{width: 40%; display: inline-block; text-align: center; padding: 1% 0 1% 0;}
-    
+
     #score1{width: 40%; display: inline-block; text-align: center; }
     #score2{width: 40%; display: inline-block; text-align: center;}
     #score3{width: 40%; display: inline-block; text-align: center;}
@@ -93,7 +93,7 @@
         <button id="btnGo" onclick="tryToEnter(event)">go!</button>
       </form>
     </div>
-    
+
     <div id="menu">
       <p><canvas id="upcoming"></canvas></p>
 
@@ -140,12 +140,12 @@
       Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
     </canvas>
   </div>
-  
+
   <audio id="song" loop="loop">
     <source src="song.mp3" type="audio/mp3">
       Your browser does not support the audio element.
     </audio>
-    
+
     <button id="btnSong" onclick="playAudio()">play song</button><p></p>
 
     <button id="btnWpp" type="submit" onclick="wppShare()">
@@ -209,7 +209,7 @@
         vscore,        // the currently displayed score (it catches up to score in small chunks - like a spinning slot machine)
         rows,          // number of completed rows in the current game
         step;          // how long before current piece drops by 1 row
-        
+
     // Dados atuais do jogador
     var nickname,
         password,
@@ -225,7 +225,7 @@
     var songIsPlaying = false;
 
     function wppShare(){
-      window.open('https://api.whatsapp.com/send?text=Já pensou em viajar o mundo sem pagar nada para aprender mais sobre e-commerce? Conheça o maior desafio universitáio da América Latina! https://vtex.tetrix.com'); 
+      window.open('https://api.whatsapp.com/send?text=Já pensou em viajar o mundo sem pagar nada para aprender mais sobre e-commerce? Conheça o maior desafio universitáio da América Latina! https://vtex.tetrix.com');
     }
 
     //-------------------------------------------------------------------------
@@ -325,7 +325,7 @@
     }
 
     function swipedetect(el, callback){
-    
+
       var touchsurface = el,
       swipedir,
       startX,
@@ -370,7 +370,7 @@
         e.preventDefault()
       }, false)
     }
-    
+
     function addEvents() {
       document.addEventListener('keydown', keydown, false);
       var el = document.getElementById('canvas');
@@ -417,7 +417,7 @@
         //        Se senha estiver errada, informar e solicitar senha novamente
         //    Se não existe nome, criar novo usuário
 
-  
+
       if (handled)
         ev.preventDefault(); // prevent arrow keys from scrolling the page (supported in IE9+ and all other browsers)
     }
@@ -439,6 +439,16 @@
 
     }
 
+    function checkPassword(user, password) {
+      fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: '',
+      })
+    }
+
     function tryToEnter(ev){
       nickname = document.getElementById("nickname").value;
       password = document.getElementById("password").value;
@@ -450,7 +460,7 @@
         alert("Enter a password");
         return;
       }
-      
+
       obj = usersData.find(x => x.nick === nickname);
       if(obj == undefined){
         usersData.push({nick: nickname, password: password, score: 0})
@@ -485,15 +495,15 @@
       }
       else{
         song.play();
-        song.volume = 0.3; 
+        song.volume = 0.3;
         songIsPlaying = true;
         btnSong.innerHTML = 'pause song';
       }
-    } 
+    }
 
-    function pauseAudio() { 
-      song.pause(); 
-    } 
+    function pauseAudio() {
+      song.pause();
+    }
 
     //-------------------------------------------------------------------------
     // GAME LOGIC
