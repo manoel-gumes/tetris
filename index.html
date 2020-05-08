@@ -88,8 +88,8 @@
       <form>
         <label for="nickname">nick:</label><br id="brForm">
         <input type="text" id="nickname" nickname="nickname" maxlength="9"><br id="brForm"><br id="brForm">
-        <label for="password">password:</label><br id="brForm">
-        <input type="password" id="password" password="password" maxlength="20"><br id="brForm">
+        <label for="email">e-mail:</label><br id="brForm">
+        <input type="text" id="email" email="email" maxlength="50"><br id="brForm">
         <button id="btnGo" onclick="tryToEnter(event)">go!</button>
       </form>
     </div>
@@ -212,7 +212,7 @@
 
     // Dados atuais do jogador
     var nickname,
-        password;
+        email;
     // Array no servidor:
     var usersData = [];
 
@@ -479,21 +479,21 @@
       ev.preventDefault()
 
       nickname = document.getElementById("nickname").value;
-      password = document.getElementById("password").value;
+      email = document.getElementById("email").value;
       if(nickname == ""){
-        alert("Enter a nickname");
+        alert("Enter your nickname");
         return;
       }
-      else if(password == ""){
-        alert("Enter a password");
+      else if(email == ""){
+        alert("Enter your e-mail");
         return;
       }
 
-      const resp = await checkPassword(nickname, password);
+      const resp = await checkPassword(nickname, email);
       await fetchScore()
 
       if (resp.status == 200){
-        usersData.push({nick: nickname, password: password, score: 0})
+        usersData.push({nick: nickname, password: email, score: 0})
         var player_name = document.getElementById('player');
         player_name.innerHTML = nickname;
         ev.preventDefault();
@@ -502,7 +502,7 @@
       else {
         const error = await resp.text()
         if (error == 'incorrect password') {
-          alert('Invalid password');
+          alert('Nick is already in use. Please choose another');
           return;
         }
       }
@@ -534,7 +534,7 @@
     //-------------------------------------------------------------------------
 
     async function saveFinalScore(){
-      await saveScore(nickname, password, score)
+      await saveScore(nickname, email, score)
       await fetchScore()
       setVisualScore();
     }
