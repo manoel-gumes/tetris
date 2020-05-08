@@ -72,6 +72,17 @@
     #score4{width: 40%; display: inline-block; text-align: center;}
     #score5{width: 40%; display: inline-block; text-align: center;}
 
+    #textTerms {
+      display: inline-block;
+      font-size: 0.7em;
+    }
+    #checkTermsInput {
+      vertical-align: bottom;
+      position: relative;
+      top: -1px;
+      *overflow: hidden;
+    }
+
     @media screen and (min-width:   0px) and (min-height:   0px)  { #tetris { width: 210px; } #login { width: 200px; height: 200px;} #menu { width: 100px; height: 200px; } #upcoming { width:  50px; height:  50px; } #canvas { width: 100px; height: 200px; } #panel { width:  100px; height: 150px;} #btnGo{padding:  5px 10px;font-size: 16px;} label{font-size: 16px;} #panel{font-size: 8px;}} /* 10px chunks */
     @media screen and (min-width: 400px) and (min-height: 400px)  { #tetris { width: 310px; } #login { width: 300px; height: 300px;} #menu { width: 150px; height: 300px; } #upcoming { width:  75px; height:  75px; } #canvas { width: 150px; height: 300px; } #panel { width:  150px; height: 225px;} #btnGo{padding: 7.5px 15px;font-size:24px;} label{font-size: 24px;} #panel{font-size: 12px;}} /* 15px chunks */
     @media screen and (min-width: 500px) and (min-height: 500px)  { #tetris { width: 410px; } #login { width: 400px; height: 400px;} #menu { width: 200px; height: 400px; } #upcoming { width: 100px; height: 100px; } #canvas { width: 200px; height: 400px; } #panel { width: 200px; height: 300px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 16px;}} /* 20px chunks */
@@ -91,6 +102,12 @@
         <label for="email">e-mail:</label><br id="brForm">
         <input type="text" id="email" email="email" maxlength="50"><br id="brForm">
         <button id="btnGo" onclick="tryToEnter(event)">go!</button>
+
+        <div id="checkTermsDiv">
+          <br>
+          <input type="checkbox" id="checkTermsInput" name="checkTerms" checked>
+          <label id="textTerms" for="termos"> I agree with <a href="https://tetrix.vtex.com/wp-content/uploads/2020/04/REGULAMENTO-CONCURSO-TETRIX-2020.pdf">this terms</a> .</label>
+        </div>
       </form>
     </div>
 
@@ -480,12 +497,17 @@
 
       nickname = document.getElementById("nickname").value;
       email = document.getElementById("email").value.toLowerCase();
+      check = document.getElementById("checkTermsInput").checked;
       if(nickname == ""){
         alert("Enter your nickname");
         return;
       }
       else if(email == ""){
         alert("Enter your e-mail");
+        return;
+      }
+      else if (check == false){
+        alert("You need to accept the terms");
         return;
       }
 
