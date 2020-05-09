@@ -50,7 +50,7 @@
             height: 100%;
             width: 100%;}
 
-    #brForm { display: block; margin-top: 15px; content: ""; }
+    #brForm { display: block; content: ""; }
 
     input     { margin: 0 0; position: relative; top: -1em;}
     #panel { background-color: #F8F8F8; display: flex; justify-content: space-between; flex-direction: column;}
@@ -74,7 +74,6 @@
 
     #textTerms {
       display: inline-block;
-      font-size: 0.7em;
     }
     #checkTermsInput {
       vertical-align: bottom;
@@ -83,13 +82,30 @@
       *overflow: hidden;
     }
 
-    @media screen and (min-width:   0px) and (min-height:   0px)  { #tetris { width: 210px; } #login { width: 200px; height: 200px;} #menu { width: 100px; height: 200px; } #upcoming { width:  50px; height:  50px; } #canvas { width: 100px; height: 200px; } #panel { width:  100px; height: 150px;} #btnGo{padding:  5px 10px;font-size: 16px;} label{font-size: 16px;} #panel{font-size: 8px;}} /* 10px chunks */
-    @media screen and (min-width: 400px) and (min-height: 400px)  { #tetris { width: 310px; } #login { width: 300px; height: 300px;} #menu { width: 150px; height: 300px; } #upcoming { width:  75px; height:  75px; } #canvas { width: 150px; height: 300px; } #panel { width:  150px; height: 225px;} #btnGo{padding: 7.5px 15px;font-size:24px;} label{font-size: 24px;} #panel{font-size: 12px;}} /* 15px chunks */
-    @media screen and (min-width: 500px) and (min-height: 500px)  { #tetris { width: 410px; } #login { width: 400px; height: 400px;} #menu { width: 200px; height: 400px; } #upcoming { width: 100px; height: 100px; } #canvas { width: 200px; height: 400px; } #panel { width: 200px; height: 300px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 16px;}} /* 20px chunks */
-    @media screen and (min-width: 600px) and (min-height: 600px)  { #tetris { width: 510px; } #login { width: 500px; height: 500px;} #menu { width: 250px; height: 500px; } #upcoming { width: 125px; height: 125px; } #canvas { width: 250px; height: 500px; } #panel { width: 250px; height: 375px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 20px;}} /* 25px chunks */
-    @media screen and (min-width: 700px) and (min-height: 700px)  { #tetris { width: 610px; } #login { width: 600px; height: 600px;} #menu { width: 300px; height: 600px; } #upcoming { width: 150px; height: 150px; } #canvas { width: 300px; height: 600px; } #panel { width: 300px; height: 450px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 24px;}} /* 30px chunks */
-    @media screen and (min-width: 800px) and (min-height: 800px)  { #tetris { width: 710px; } #login { width: 700px; height: 700px;} #menu { width: 350px; height: 700px; } #upcoming { width: 175px; height: 175px; } #canvas { width: 350px; height: 700px; } #panel { width: 250px; height: 525px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 28px;}} /* 35px chunks */
-    @media screen and (min-width: 900px) and (min-height: 900px)  { #tetris { width: 810px; } #login { width: 800px; height: 800px;} #menu { width: 400px; height: 800px; } #upcoming { width: 200px; height: 200px; } #canvas { width: 400px; height: 800px; } #panel { width: 400px; height: 600px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 32px;}} /* 40px chunks */
+    #howToText {
+      color: rgb(136, 136, 136);
+    }
+
+    .arrow {
+      border: solid rgb(136, 136, 136);
+      border-width: 0 0.2em 0.2em 0;
+      display: inline-block;
+      padding: 0.2em;
+      vertical-align: middle;
+    }
+
+    .right { transform: rotate(-45deg); -webkit-transform: rotate(-45deg);}
+    .left { transform: rotate(135deg); -webkit-transform: rotate(135deg);}
+    .up { transform: rotate(-135deg); -webkit-transform: rotate(-135deg); }
+    .down { transform: rotate(45deg); -webkit-transform: rotate(45deg); }
+
+    @media screen and (min-width:   0px) and (min-height:   0px)  { #tetris { width: 210px; } #login { width: 200px; height: 200px;} #menu { width: 100px; height: 200px; } #upcoming { width:  50px; height:  50px; } #canvas { width: 100px; height: 200px; } #panel { width:  100px; height: 150px;} #btnGo{padding:  5px 10px;font-size: 16px;} label{font-size: 16px;} #panel{font-size:  8px;} #textTerms{font-size: 0.32em;} #howToText{font-size: 0.32em;} #brForm{margin-top:   10px;}} /* 10px chunks */
+    @media screen and (min-width: 400px) and (min-height: 400px)  { #tetris { width: 310px; } #login { width: 300px; height: 300px;} #menu { width: 150px; height: 300px; } #upcoming { width:  75px; height:  75px; } #canvas { width: 150px; height: 300px; } #panel { width:  150px; height: 225px;} #btnGo{padding: 7.5px 15px;font-size:24px;} label{font-size: 24px;} #panel{font-size: 12px;} #textTerms{font-size: 0.48em;} #howToText{font-size: 0.48em;} #brForm{margin-top: 12.5px;}} /* 15px chunks */
+    @media screen and (min-width: 500px) and (min-height: 500px)  { #tetris { width: 410px; } #login { width: 400px; height: 400px;} #menu { width: 200px; height: 400px; } #upcoming { width: 100px; height: 100px; } #canvas { width: 200px; height: 400px; } #panel { width: 200px; height: 300px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 16px;} #textTerms{font-size: 0.64em;} #howToText{font-size: 0.64em;} #brForm{margin-top:   15px;}} /* 20px chunks */
+    @media screen and (min-width: 600px) and (min-height: 600px)  { #tetris { width: 510px; } #login { width: 500px; height: 500px;} #menu { width: 250px; height: 500px; } #upcoming { width: 125px; height: 125px; } #canvas { width: 250px; height: 500px; } #panel { width: 250px; height: 375px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 20px;} #textTerms{font-size:  0.8em;} #howToText{font-size:  0.8em;} #brForm{margin-top: 17.5px;}} /* 25px chunks */
+    @media screen and (min-width: 700px) and (min-height: 700px)  { #tetris { width: 610px; } #login { width: 600px; height: 600px;} #menu { width: 300px; height: 600px; } #upcoming { width: 150px; height: 150px; } #canvas { width: 300px; height: 600px; } #panel { width: 300px; height: 450px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 24px;} #textTerms{font-size: 0.96em;} #howToText{font-size: 0.96em;} #brForm{margin-top: 17.5px;}} /* 30px chunks */
+    @media screen and (min-width: 800px) and (min-height: 800px)  { #tetris { width: 710px; } #login { width: 700px; height: 700px;} #menu { width: 350px; height: 700px; } #upcoming { width: 175px; height: 175px; } #canvas { width: 350px; height: 700px; } #panel { width: 250px; height: 525px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 28px;} #textTerms{font-size: 1.12em;} #howToText{font-size: 1.12em;} #brForm{margin-top: 17.5px;}} /* 35px chunks */
+    @media screen and (min-width: 900px) and (min-height: 900px)  { #tetris { width: 810px; } #login { width: 800px; height: 800px;} #menu { width: 400px; height: 800px; } #upcoming { width: 200px; height: 200px; } #canvas { width: 400px; height: 800px; } #panel { width: 400px; height: 600px; } #btnGo{padding: 10px 20px;font-size: 32px;} label{font-size: 32px;} #panel{font-size: 32px;} #textTerms{font-size: 1.28em;} #howToText{font-size: 1.28em;} #brForm{margin-top: 17.5px;}} /* 40px chunks */
   </style>
 </head>
 
@@ -104,7 +120,7 @@
         <button id="btnGo" onclick="tryToEnter(event)">go!</button>
 
         <div id="checkTermsDiv">
-          <br>
+          <br id="brForm">
           <input type="checkbox" id="checkTermsInput" name="checkTerms" checked>
           <label id="textTerms" for="termos"> I agree with <a href="https://tetrix.vtex.com/wp-content/uploads/2020/04/REGULAMENTO-CONCURSO-TETRIX-2020.pdf">this terms</a> .</label>
         </div>
@@ -153,11 +169,16 @@
 
     </div>
 
+    
     <canvas id="canvas">
       Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
-    </canvas>
+    </canvas>  
+    
+    <div id="howToDiv">
+      <label id="howToText">how to play: swipe up, down, left or right, or use the arrows &nbsp &nbsp <i class="arrow up"></i> &nbsp &nbsp <i class="arrow down"></i> &nbsp &nbsp <i class="arrow left"></i> &nbsp &nbsp <i class="arrow right"></i> </label>
+    </div>
   </div>
-
+  
   <audio id="song" loop="loop">
     <source src="song.mp3" type="audio/mp3">
       Your browser does not support the audio element.
@@ -225,7 +246,8 @@
         score,         // the current score
         vscore,        // the currently displayed score (it catches up to score in small chunks - like a spinning slot machine)
         rows,          // number of completed rows in the current game
-        step;          // how long before current piece drops by 1 row
+        step,          // how long before current piece drops by 1 row
+        downFactor = 1;
 
     // Dados atuais do jogador
     var nickname,
@@ -343,8 +365,8 @@
       startY,
       distX,
       distY,
-      threshold = 25, //required min distance traveled to be considered swipe
-      restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+      threshold = 40, //required min distance traveled to be considered swipe
+      restraint = 125, // maximum distance allowed at the same time in perpendicular direction
       allowedTime = 300, // maximum time allowed to travel that distance
       elapsedTime,
       startTime,
@@ -374,7 +396,24 @@
                 swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
             }
             else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
-                swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+                if (distY < 0){
+                  swipedir = 'up';
+                }
+                else{
+                  swipedir = 'down';
+                  if (distY >= 4*threshold){
+                    downFactor = 4;
+                  }
+                  else if (distY >= 3*threshold){
+                    downFactor = 3;
+                  }
+                  else if (distY >= 2*threshold){
+                    downFactor = 2;
+                  }
+                  else{
+                    downFactor = 1;
+                  }
+                }
             }
         }
         handleswipe(swipedir)
@@ -623,17 +662,25 @@
       switch(dir) {
         case DIR.RIGHT: x = x + 1; break;
         case DIR.LEFT:  x = x - 1; break;
-        case DIR.DOWN:  y = y + 1; break;
+        case DIR.DOWN:  y = y + downFactor*1; break;
       }
-      if (unoccupied(current.type, x, y, current.dir)) {
+      var maxY = y;
+      while (occupied(current.type, x, y, current.dir) && downFactor > 1){
+        maxY -= 1;
+        downFactor -= 1;
+      }
+
+      if (unoccupied(current.type, x, maxY, current.dir)) {
         current.x = x;
-        current.y = y;
+        current.y = maxY;
         invalidate();
         return true;
       }
       else {
         return false;
       }
+
+      downFactor = 1; 
     }
 
     function rotate() {
