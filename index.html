@@ -262,7 +262,7 @@
         rows,          // number of completed rows in the current game
         step,         // how long before current piece drops by 1 row        
         downFactor = 1,
-        sideFactor = 0;
+        posTouch;
 
     // Dados atuais do jogador
     var nickname,
@@ -398,24 +398,29 @@
 
       touchsurface.addEventListener('touchmove', function(e){
         e.preventDefault() // prevent scrolling when inside DIV
+        var touchobj = e.changedTouches[0]
+        var teste1, teste2, teste3;
+        teste1 = touchobj.screenX/touchobj.target.width; // get horizontal dist traveled by finger while in contact with surface
+        teste2 = parseInt(8*(touchobj.clientX/touchobj.target.width-1));
+        teste3 = touchobj.target.width;
+        distX = touchobj.pageX - startX;
+        if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){
+          posTouch = parseInt(8*(touchobj.clientX/touchobj.target.width-1));
+        }
+        console.log(touchobj.target.width + " >>> " + current.x + " >>> " + teste1.toString() + "|" + teste2.toString() + "|" + teste3.toString());
       }, false)
 
       touchsurface.addEventListener('touchend', function(e){
-        var touchobj = e.changedTouches[0]
-        distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
-        distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
-        elapsedTime = new Date().getTime() - startTime // get time elapsed
+        var touchobj = e.changedTouches[0];
+        distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+        distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime; // get time elapsed
         if (elapsedTime <= allowedTime){ // first condition for awipe met
-            if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
-                swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
-                if (swipedir == 'right' && distX >= 2*threshold){
-                  sideFactor = 1;
-                }
-                if (swipedir == 'left' && distX <= 2*threshold){
-                  sideFactor = -1;
-                }
-            }
-            else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+            //if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+            //    swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+            //}
+            //else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+            if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
                 if (distY < 0){
                   swipedir = 'up';
                 }
@@ -428,6 +433,9 @@
                     downFactor = 1;
                   }
                 }
+            }
+            else{
+              posTouch = current.x;
             }
         }
         handleswipe(swipedir)
@@ -651,7 +659,6 @@
 
     function update(idt) {
       if (playing) {
-        console.log(sideFactor)
         if (vscore < score)
           setVisualScore(vscore + 1);
         handle(actions.shift());
@@ -665,13 +672,11 @@
           drop();
         }
 
-        if (sideFactor > 0){
+        if(posTouch - current.x > 0){
           move(DIR.RIGHT);
-          sideFactor = 0;
         }
-        else if (sideFactor < 0){
+        if(posTouch - current.x < 0){
           move(DIR.LEFT);
-          sideFactor = 0;
         }
       }
     }
@@ -723,6 +728,7 @@
         removeLines();
         setCurrentPiece(next);
         setNextPiece(randomPiece());
+        posTouch = current.x;
         clearActions();
         if (occupied(current.type, current.x, current.y, current.dir)) {
           lose();
