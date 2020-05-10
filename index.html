@@ -409,17 +409,17 @@
         elapsedTime = new Date().getTime() - startTime; // get time elapsed
         if (sideFactor == 0 && elapsedTime <= allowedTime && Math.abs(distY) <= restraint){ // first condition for awipe met
             sideFactor = parseInt(8*distX/touchobj.target.width);
-            if(Math.abs(sideFactor) >= 5){
-              sideFactor = 3*sideFactor/Math.abs(sideFactor);
-            }
-            else if(Math.abs(sideFactor) >= 3){
+            if(Math.abs(sideFactor) >= 3){
               sideFactor = 2*sideFactor/Math.abs(sideFactor);
             }
             else if (Math.abs(sideFactor) >= 1){
               sideFactor = sideFactor/Math.abs(sideFactor);
             }
+            else{
+             sideFactor = 0;
+            }
         }
-        else if (elapsedTime <= allowedTime && Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+        else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
             if (distY < 0){
               swipedir = 'up';
             }
