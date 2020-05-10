@@ -661,8 +661,8 @@
           dtDown = 0;
           downFactor = 1;
         }
-        if (dt > step/(downFactor*downFactor)) {
-          dt = dt - step/(downFactor*downFactor);
+        if (dt > step/(4*downFactor)) {
+          dt = dt - step/(4*downFactor);
           drop();
         }
       }
@@ -683,20 +683,12 @@
         case DIR.RIGHT: x = x + 1; break;
         case DIR.LEFT:  x = x - 1; break;
         case DIR.DOWN:  y = y + 1;  break;
-        //case DIR.DOWN:  y = y + downFactor*1; break;
 
       }
-      //var maxY = y;
-      //while (occupied(current.type, x, y, current.dir) && downFactor > 1){
-      //  maxY -= 1;
-      //  downFactor -= 1;
-      //}
 
-      //if (unoccupied(current.type, x, maxY, current.dir)) {
       if (unoccupied(current.type, x, y, current.dir)) {
         current.x = x;
         current.y = y;
-        //current.y = maxY;
 
         invalidate();
         return true;
