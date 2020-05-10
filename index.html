@@ -379,7 +379,7 @@
       startY,
       distX,
       distY,
-      threshold = 40, //required min distance traveled to be considered swipe
+      threshold = 20, //required min distance traveled to be considered swipe
       restraint = 125, // maximum distance allowed at the same time in perpendicular direction
       allowedTime = 300, // maximum time allowed to travel that distance
       elapsedTime,
@@ -415,10 +415,7 @@
                 }
                 else{
                   swipedir = 'down';
-                  if (distY >= 4*threshold){
-                    downFactor = 4;
-                  }
-                  else if (distY >= 3*threshold){
+                  if (distY >= 3*threshold){
                     downFactor = 3;
                   }
                   else if (distY >= 2*threshold){
@@ -651,19 +648,21 @@
 
     function update(idt) {
       if (playing) {
-        console.log(downFactor);
         if (vscore < score)
           setVisualScore(vscore + 1);
         handle(actions.shift());
         dt = dt + idt;
         dtDown = dtDown + idt;
-        if (downFactor > 1 && dtDown > step/2) {
+        if (downFactor == 1 && dt > step) {
+          dt = dt - step;
+          drop();
+        }
+        else if (downFactor > 1) {
+          drop();
+        }
+        if (downFactor > 1 && dtDown > step/(1 + downFactor/10)) {
           dtDown = 0;
           downFactor = 1;
-        }
-        if (dt > step/(8*downFactor)) {
-          dt = dt - step/(8*downFactor);
-          drop();
         }
       }
     }
