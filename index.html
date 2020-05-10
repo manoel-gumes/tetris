@@ -403,11 +403,12 @@
       }, false)
 
       touchsurface.addEventListener('touchend', function(e){
+        sideFactor = 0;
         var touchobj = e.changedTouches[0];
         distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
         distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
         elapsedTime = new Date().getTime() - startTime; // get time elapsed
-        if (sideFactor == 0 && elapsedTime <= allowedTime && Math.abs(distY) <= restraint){ // first condition for awipe met
+        if (elapsedTime <= allowedTime && Math.abs(distY) <= restraint){ // first condition for awipe met
             sideFactor = parseInt(8*distX/touchobj.target.width);
             if(Math.abs(sideFactor) >= 3){
               sideFactor = 2*sideFactor/Math.abs(sideFactor);
