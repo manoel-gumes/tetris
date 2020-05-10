@@ -419,7 +419,7 @@
               sideFactor = sideFactor/Math.abs(sideFactor);
             }
         }
-        else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+        else if (elapsedTime <= allowedTime && Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
             if (distY < 0){
               swipedir = 'up';
             }
