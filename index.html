@@ -262,6 +262,7 @@
         rows,          // number of completed rows in the current game
         step,         // how long before current piece drops by 1 row        
         downFactor = 1,
+        sideFactor = 0,
         posTouch;
 
     // Dados atuais do jogador
@@ -406,8 +407,9 @@
         distX = touchobj.pageX - startX;
         if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){
           posTouch = parseInt(8*(touchobj.clientX/touchobj.target.width-1));
+          sideFactor = parseInt(4*distX/touchobj.target.width);
         }
-        console.log(touchobj.target.width + " >>> " + current.x + " >>> " + teste1.toString() + "|" + teste2.toString() + "|" + teste3.toString());
+        console.log(sideFactor + " >>> " + current.x + " >>> " + teste1.toString() + "|" + teste2.toString() + "|" + teste3.toString());
       }, false)
 
       touchsurface.addEventListener('touchend', function(e){
@@ -672,11 +674,13 @@
           drop();
         }
 
-        if(posTouch - current.x > 0){
+        if(sideFactor > 0){
           move(DIR.RIGHT);
+          sideFactor -= 1;
         }
-        if(posTouch - current.x < 0){
+        if(sideFactor < 0){
           move(DIR.LEFT);
+          sideFactor += 1;
         }
       }
     }
@@ -723,6 +727,7 @@
       
       if (!move(DIR.DOWN)) {
         downFactor = 1;
+        sideFactor = 0;
         addScore(10);
         dropPiece();
         removeLines();
