@@ -403,38 +403,50 @@
       }, false)
 
       touchsurface.addEventListener('touchend', function(e){
-        sideFactor = 0;
+        //sideFactor = 0;
         var touchobj = e.changedTouches[0];
         distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
         distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
         elapsedTime = new Date().getTime() - startTime; // get time elapsed
-        if (elapsedTime <= allowedTime && Math.abs(distY) <= restraint){ // first condition for awipe met
-            sideFactor = parseInt(8*distX/touchobj.target.width);
-            if(Math.abs(sideFactor) >= 3){
-              sideFactor = 2*sideFactor/Math.abs(sideFactor);
-            }
-            else if (Math.abs(sideFactor) >= 1){
-              sideFactor = sideFactor/Math.abs(sideFactor);
-            }
-            else{
-             sideFactor = 0;
-            }
-        }
-        else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
-            if (distY < 0){
-              swipedir = 'up';
-            }
-            else{
-              swipedir = 'down';
-              if (distY >= threshold){
-                downFactor = 2;
+        if (elapsedTime <= allowedTime){ // first condition for awipe met
+            //if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+            //    swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+            //}
+            //else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+            
+            if (sideFactor == 0 && Math.abs(distY) <= restraint){
+              sideFactor = parseInt(8*distX/touchobj.target.width);
+              if(Math.abs(sideFactor) >= 5){
+                sideFactor = 3*sideFactor/Math.abs(sideFactor);
+              }
+              else if (Math.abs(sideFactor) >= 3){
+                sideFactor = 2*sideFactor/Math.abs(sideFactor);
+              }
+              else if (Math.abs(sideFactor) >= 1){
+                sideFactor = sideFactor/Math.abs(sideFactor);
               }
               else{
-                downFactor = 1;
+                sideFactor = 0;
               }
-            }
-        }
 
+            }
+            
+            if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+                if (distY < 0){
+                  swipedir = 'up';
+                }
+                else{
+                  swipedir = 'down';
+                  if (distY >= threshold){
+                    downFactor = 2;
+                  }
+                  else{
+                    downFactor = 1;
+                  }
+                }
+            }
+
+        }
         handleswipe(swipedir)
         e.preventDefault()
       }, false)
@@ -669,6 +681,7 @@
           drop();
         }
 
+        console.log(sideFactor)
         if(sideFactor >= 1){
           move(DIR.RIGHT);
           sideFactor -= 1;
