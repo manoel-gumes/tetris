@@ -183,7 +183,6 @@
 
     </div>
 
-    
     <canvas id="canvas">
       Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
     </canvas>  
@@ -255,12 +254,13 @@
         actions,       // queue of user actions (inputs)
         playing,       // true|false - game is in progress
         dt,            // time since starting this game
+        dtDown = 0,
         current,       // the current piece
         next,          // the next piece
         score,         // the current score
         vscore,        // the currently displayed score (it catches up to score in small chunks - like a spinning slot machine)
         rows,          // number of completed rows in the current game
-        step,          // how long before current piece drops by 1 row
+        step,         // how long before current piece drops by 1 row        
         downFactor = 1;
 
     // Dados atuais do jogador
@@ -651,12 +651,18 @@
 
     function update(idt) {
       if (playing) {
+        console.log(downFactor);
         if (vscore < score)
           setVisualScore(vscore + 1);
         handle(actions.shift());
         dt = dt + idt;
-        if (dt > step) {
-          dt = dt - step;
+        dtDown = dtDown + idt;
+        if (downFactor > 1 && dtDown > step) {
+          dtDown = 0;
+          downFactor = 1;
+        }
+        if (dt > step/(downFactor*downFactor)) {
+          dt = dt - step/(downFactor*downFactor);
           drop();
         }
       }
@@ -676,25 +682,28 @@
       switch(dir) {
         case DIR.RIGHT: x = x + 1; break;
         case DIR.LEFT:  x = x - 1; break;
-        case DIR.DOWN:  y = y + downFactor*1; break;
-      }
-      var maxY = y;
-      while (occupied(current.type, x, y, current.dir) && downFactor > 1){
-        maxY -= 1;
-        downFactor -= 1;
-      }
+        case DIR.DOWN:  y = y + 1;  break;
+        //case DIR.DOWN:  y = y + downFactor*1; break;
 
-      if (unoccupied(current.type, x, maxY, current.dir)) {
+      }
+      //var maxY = y;
+      //while (occupied(current.type, x, y, current.dir) && downFactor > 1){
+      //  maxY -= 1;
+      //  downFactor -= 1;
+      //}
+
+      //if (unoccupied(current.type, x, maxY, current.dir)) {
+      if (unoccupied(current.type, x, y, current.dir)) {
         current.x = x;
-        current.y = maxY;
+        current.y = y;
+        //current.y = maxY;
+
         invalidate();
         return true;
       }
       else {
         return false;
       }
-
-      downFactor = 1; 
     }
 
     function rotate() {
@@ -706,6 +715,7 @@
     }
 
     function drop() {
+      
       if (!move(DIR.DOWN)) {
         addScore(10);
         dropPiece();
