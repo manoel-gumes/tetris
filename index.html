@@ -657,12 +657,12 @@
         handle(actions.shift());
         dt = dt + idt;
         dtDown = dtDown + idt;
-        if (downFactor > 1 && dtDown > step) {
+        if (downFactor > 1 && dtDown > step/2) {
           dtDown = 0;
           downFactor = 1;
         }
-        if (dt > step/(4*downFactor)) {
-          dt = dt - step/(4*downFactor);
+        if (dt > step/(8*downFactor)) {
+          dt = dt - step/(8*downFactor);
           drop();
         }
       }
