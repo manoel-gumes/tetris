@@ -261,7 +261,8 @@
         vscore,        // the currently displayed score (it catches up to score in small chunks - like a spinning slot machine)
         rows,          // number of completed rows in the current game
         step,         // how long before current piece drops by 1 row        
-        downFactor = 1;
+        downFactor = 1,
+        sideFactor = 0;
 
     // Dados atuais do jogador
     var nickname,
@@ -359,7 +360,6 @@
         now = timestamp();
         update(Math.min(1, (now - last) / 1000.0)); // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
         draw();
-        //stats.update();
         last = now;
         requestAnimationFrame(frame, canvas);
       }
@@ -379,7 +379,7 @@
       startY,
       distX,
       distY,
-      threshold = 20, //required min distance traveled to be considered swipe
+      threshold = 40, //required min distance traveled to be considered swipe
       restraint = 125, // maximum distance allowed at the same time in perpendicular direction
       allowedTime = 300, // maximum time allowed to travel that distance
       elapsedTime,
@@ -408,6 +408,12 @@
         if (elapsedTime <= allowedTime){ // first condition for awipe met
             if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
                 swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+                if (swipedir == 'right' && distX >= 2*threshold){
+                  sideFactor = 1;
+                }
+                if (swipedir == 'left' && distX <= 2*threshold){
+                  sideFactor = -1;
+                }
             }
             else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
                 if (distY < 0){
@@ -415,10 +421,7 @@
                 }
                 else{
                   swipedir = 'down';
-                  if (distY >= 3*threshold){
-                    downFactor = 3;
-                  }
-                  else if (distY >= 2*threshold){
+                  if (distY >= threshold){
                     downFactor = 2;
                   }
                   else{
@@ -648,6 +651,7 @@
 
     function update(idt) {
       if (playing) {
+        console.log(sideFactor)
         if (vscore < score)
           setVisualScore(vscore + 1);
         handle(actions.shift());
@@ -660,9 +664,14 @@
         else if (downFactor > 1) {
           drop();
         }
-        if (downFactor > 1 && dtDown > step/(1 + downFactor/10)) {
-          dtDown = 0;
-          downFactor = 1;
+
+        if (sideFactor > 0){
+          move(DIR.RIGHT);
+          sideFactor = 0;
+        }
+        else if (sideFactor < 0){
+          move(DIR.LEFT);
+          sideFactor = 0;
         }
       }
     }
@@ -708,6 +717,7 @@
     function drop() {
       
       if (!move(DIR.DOWN)) {
+        downFactor = 1;
         addScore(10);
         dropPiece();
         removeLines();
