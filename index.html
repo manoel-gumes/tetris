@@ -143,10 +143,10 @@
         <span id="player"> </span>
         <span id="score"> </span>
         </p>
+        <p>
+          <span>top 5<br></span>
+        </p>
         <div id="ranking">
-          <p>
-            <span>top 30<br></span>
-          </p>
         </div>
 
       </div>
@@ -482,7 +482,7 @@
         first.remove(); 
         first = lista.firstElementChild; 
       } 
-      for(var i = 0; i < 30 && i < ordered.length; i++){
+      for(var i = 0; i < 5 && i < ordered.length; i++){
         let item = document.createElement('p');
         let item_span_player = document.createElement('span');
         item_span_player.style = "width: 40%; display: inline-block; text-align: center;";
