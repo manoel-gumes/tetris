@@ -5,10 +5,10 @@
 <head>
   <title>Javascript Tetris</title>
   <style>
-    body      { font-family: Impact, sans-serif; }
+    body      { font-family: Impact, sans-serif; background-color: rgba(0, 20, 47,0.9);}
     #tetris   { margin: 1em auto; background-color: #F8F8F8; }
     #canvas   { display: inline-block; vertical-align: top; background-color: rgba(0, 20, 47);}/*background: url(texture.jpg); }*/
-    #menu     { margin: 0 0; display: inline-block; vertical-align: top; }
+    #menu     { margin: 0 0; display: inline-block; vertical-align: top;}
     #menu p   { margin: 0 0; text-align: center; color: rgb(0, 20, 47);}
     #menu p a { text-decoration: none; color: rgb(0, 20, 47); }
     #upcoming { display: block; margin: 0 auto; background-color: rgba(0, 20, 47); background-size: 100%; background-image: url(background2.png);}
@@ -58,25 +58,13 @@
     #player{width: 40%; display: inline-block; text-align: center; padding: 15% 0 15% 0;}
     #score{width: 40%; display: inline-block;text-align: center; padding: 15% 0 15% 0;}
 
-    #ranking{padding-top: 20%; height: 70%; background-image: url("background3.png"); background-size: 100% 100%;}
-
-    #player1{width: 40%; display: inline-block; text-align: center;}
-    #player2{width: 40%; display: inline-block; text-align: center; padding: 1% 0 1% 0;}
-    #player3{width: 40%; display: inline-block; text-align: center; padding: 1% 0 1% 0;}
-    #player4{width: 40%; display: inline-block; text-align: center; padding: 1% 0 1% 0;}
-    #player5{width: 40%; display: inline-block; text-align: center; padding: 1% 0 1% 0;}
-
-    #score1{width: 40%; display: inline-block; text-align: center; }
-    #score2{width: 40%; display: inline-block; text-align: center;}
-    #score3{width: 40%; display: inline-block; text-align: center;}
-    #score4{width: 40%; display: inline-block; text-align: center;}
-    #score5{width: 40%; display: inline-block; text-align: center;}
+    #ranking{padding-top: 20%; height: 70%; }
 
     #textTerms {
       display: inline-block;
     }
     #checkTermsInput {
-      vertical-align: bottom;
+      vertical-align: middle;
       position: relative;
       top: -1px;
       *overflow: hidden;
@@ -85,6 +73,7 @@
     #howToText {
       color: rgb(136, 136, 136);
     }
+    #howToDiv{background-color: rgba(0, 20, 47,0.9);}
 
     .arrow {
       border: solid rgb(136, 136, 136);
@@ -123,7 +112,7 @@
   </style>
 </head>
 
-<body>
+<body id="body">
   <div id="tetris">
     <div id="login">
       <form>
@@ -141,9 +130,14 @@
       </form>
     </div>
 
+    <!--
+    <div id="gameOver">
+      <label id="gameOverText">vc já se inscreveu? </label>
+    </div>
+  -->
+
     <div id="menu">
       <p><canvas id="upcoming"></canvas></p>
-
       <div id="panel">
         <p>
         <span id="player"> </span>
@@ -151,31 +145,7 @@
         </p>
         <div id="ranking">
           <p>
-            <span>top 5<br></span>
-          </p>
-
-          <p>
-            <span id="player1"> </span>
-            <span id="score1"> </span>
-          </p>
-
-          <p>
-            <span id="player2"> </span>
-            <span id="score2"> </span>
-          </p>
-
-          <p>
-            <span id="player3"> </span>
-            <span id="score3"> </span>
-          </p>
-
-          <p>
-            <span id="player4"> </span>
-            <span id="score4"> </span>
-          </p>
-          <p>
-            <span id="player5"> </span>
-            <span id="score5"> </span>
+            <span>top 30<br></span>
           </p>
         </div>
 
@@ -273,7 +243,7 @@
     var songIsPlaying = false;
 
     function wppShare(){
-      window.open('https://api.whatsapp.com/send?text=Já pensou em viajar o mundo sem pagar nada para aprender mais sobre e-commerce? Conheça o maior desafio universitáio da América Latina! https://tetrix.vtex.com/');
+      window.open('https://api.whatsapp.com/send?text=Já pensou viajar o mundo sem pagar nada? Participe do TETRIX: https://tetrix.vtex.com/');
     }
 
     //-------------------------------------------------------------------------
@@ -292,13 +262,13 @@
     //
     //-------------------------------------------------------------------------
 
-    var i = { size: 4, blocks: [0x0F00, 0x2222, 0x00F0, 0x4444], color: 'cyan'   };
-    var j = { size: 3, blocks: [0x44C0, 0x8E00, 0x6440, 0x0E20], color: 'blue'   };
-    var l = { size: 3, blocks: [0x4460, 0x0E80, 0xC440, 0x2E00], color: 'orange' };
-    var o = { size: 2, blocks: [0xCC00, 0xCC00, 0xCC00, 0xCC00], color: 'yellow' };
-    var s = { size: 3, blocks: [0x06C0, 0x8C40, 0x6C00, 0x4620], color: 'green'  };
-    var t = { size: 3, blocks: [0x0E40, 0x4C40, 0x4E00, 0x4640], color: 'purple' };
-    var z = { size: 3, blocks: [0x0C60, 0x4C80, 0xC600, 0x2640], color: 'red'    };
+    var i = { size: 4, blocks: [0x0F00, 0x2222, 0x00F0, 0x4444]};
+    var j = { size: 3, blocks: [0x44C0, 0x8E00, 0x6440, 0x0E20]};
+    var l = { size: 3, blocks: [0x4460, 0x0E80, 0xC440, 0x2E00]};
+    var o = { size: 2, blocks: [0xCC00, 0xCC00, 0xCC00, 0xCC00]};
+    var s = { size: 3, blocks: [0x06C0, 0x8C40, 0x6C00, 0x4620]};
+    var t = { size: 3, blocks: [0x0E40, 0x4C40, 0x4E00, 0x4640]};
+    var z = { size: 3, blocks: [0x0C60, 0x4C80, 0xC600, 0x2640]};
 
     //------------------------------------------------
     // do the bit manipulation and iterate through each
@@ -504,19 +474,27 @@
     }
 
     function updateRanking(){
-      var ordered = usersData.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
+      let ordered = usersData.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
 
-      document.getElementById('player1').innerHTML = ordered[0].nick;
-      document.getElementById('player2').innerHTML = ordered[1].nick;
-      document.getElementById('player3').innerHTML = ordered[2].nick;
-      document.getElementById('player4').innerHTML = ordered[3].nick;
-      document.getElementById('player5').innerHTML = ordered[4].nick;
-
-      document.getElementById('score1').innerHTML = ordered[0].score;
-      document.getElementById('score2').innerHTML = ordered[1].score;
-      document.getElementById('score3').innerHTML = ordered[2].score;
-      document.getElementById('score4').innerHTML = ordered[3].score;
-      document.getElementById('score5').innerHTML = ordered[4].score;
+      let lista = document.getElementById('ranking');
+      let first = lista.firstElementChild; 
+      while (first) { 
+        first.remove(); 
+        first = lista.firstElementChild; 
+      } 
+      for(var i = 0; i < 30 && i < ordered.length; i++){
+        let item = document.createElement('p');
+        let item_span_player = document.createElement('span');
+        item_span_player.style = "width: 40%; display: inline-block; text-align: center;";
+        
+        let item_span_score = document.createElement('span');
+        item_span_score.style = "width: 40%; display: inline-block; text-align: center;";
+        item_span_player.textContent = ordered[i].nick;
+        item_span_score.textContent = ordered[i].score;
+        item.appendChild(item_span_player);
+        item.appendChild(item_span_score);
+        lista.appendChild(item);
+      }
 
     }
 
@@ -639,8 +617,32 @@
       }
     }
 
-    function play() { hide('login'); reset(); playing = true; }
-    function lose() { saveFinalScore(); show('login'); playing = false;}
+    function play() {
+      hide('login');
+      reset();
+
+      let body_element = document.getElementById('body');
+      body_element.style = "background-color: white;";
+
+      let howToDiv_element = document.getElementById('howToDiv');
+      howToDiv_element.style = "background-color: white;";
+
+      playing = true;
+      playAudio();
+    }
+    function lose() {
+      saveFinalScore();
+      show('login');
+      
+      let body_element = document.getElementById('body');
+      body_element.style = "background-color: rgba(0, 20, 47,0.9);";
+
+      let howToDiv_element = document.getElementById('howToDiv');
+      howToDiv_element.style = "background-color: rgba(0, 20, 47,0.9);";
+
+      playing = false;
+      playAudio();
+    }
 
     function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
     function setScore(n)            { score = n; setVisualScore(n);  }
@@ -680,8 +682,6 @@
         else if (downFactor > 1) {
           drop();
         }
-
-        console.log(sideFactor)
         if(sideFactor >= 1){
           move(DIR.RIGHT);
           sideFactor -= 1;
