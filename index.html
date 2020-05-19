@@ -167,7 +167,7 @@
       Your browser does not support the audio element.
     </audio>
 
-    <button id="btnSong" onclick="playAudio()">play song</button><p></p>
+    <button id="btnSong" onclick="changeAudio()">play song</button><p></p>
 
     <button id="btnWpp" type="submit" onclick="wppShare()">
       <a target="_blank" href='https://pt.stackoverflow.com'></a>
@@ -581,7 +581,7 @@
     var song = document.getElementById("song");
     var btnSong = document.getElementById("btnSong");
 
-    function playAudio() {
+    function changeAudio() {
       if(songIsPlaying){
         song.pause();
         songIsPlaying = false;
@@ -597,6 +597,15 @@
 
     function pauseAudio() {
       song.pause();
+      songIsPlaying = false;
+      btnSong.innerHTML = 'play song';
+    }
+
+    function playAudio() {
+      song.play();
+      song.volume = 0.3;
+      songIsPlaying = true;
+      btnSong.innerHTML = 'pause song';
     }
 
     //-------------------------------------------------------------------------
@@ -641,7 +650,7 @@
       howToDiv_element.style = "background-color: rgba(0, 20, 47,0.9);";
 
       playing = false;
-      playAudio();
+      pauseAudio();
     }
 
     function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
