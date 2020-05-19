@@ -55,10 +55,10 @@
     input     { margin: 0 0; position: relative; top: -1em;}
     #panel { background-color: #F8F8F8; display: flex; justify-content: space-between; flex-direction: column;}
 
-    #player{width: 40%; display: inline-block; text-align: center; padding: 15% 0 15% 0;}
-    #score{width: 40%; display: inline-block;text-align: center; padding: 15% 0 15% 0;}
+    #player{width: 40%; display: inline-block; text-align: center; padding: 5% 0 5% 0;}
+    #score{width: 40%; display: inline-block; text-align: center; padding: 5% 0 5% 0;}
 
-    #ranking{padding-top: 20%; height: 70%; }
+    #ranking{padding-top: 0%; height: 70%; font-size: 0.5em;}
 
     #textTerms {
       display: inline-block;
@@ -144,7 +144,7 @@
         <span id="score"> </span>
         </p>
         <p>
-          <span>top 5<br></span>
+          <span>top 20<br></span>
         </p>
         <div id="ranking">
         </div>
@@ -474,7 +474,7 @@
     }
 
     function updateRanking(){
-      let ordered = usersData.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
+      //let ordered = usersData.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
 
       let lista = document.getElementById('ranking');
       let first = lista.firstElementChild; 
@@ -482,15 +482,15 @@
         first.remove(); 
         first = lista.firstElementChild; 
       } 
-      for(var i = 0; i < 5 && i < ordered.length; i++){
+      for(var i = 0; i < 20 && i < usersData.length; i++){
         let item = document.createElement('p');
         let item_span_player = document.createElement('span');
         item_span_player.style = "width: 40%; display: inline-block; text-align: center;";
         
         let item_span_score = document.createElement('span');
         item_span_score.style = "width: 40%; display: inline-block; text-align: center;";
-        item_span_player.textContent = ordered[i].nick;
-        item_span_score.textContent = ordered[i].score;
+        item_span_player.textContent = usersData[i].nick;
+        item_span_score.textContent = usersData[i].score;
         item.appendChild(item_span_player);
         item.appendChild(item_span_score);
         lista.appendChild(item);
