@@ -3,10 +3,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" charset="utf-8"/>
 <html>
 <head>
-  <title>Javascript Tetris</title>
+  <title>Tetris</title>
   <style>
     body      { font-family: Impact, sans-serif; background-color: rgba(0, 20, 47,0.9);}
-    #tetris   { margin: 1em auto; background-color: #F8F8F8; }
+    #tetris   { margin: 1em auto; background-color: rgb(255, 255, 255); }
     #canvas   { display: inline-block; vertical-align: top; background-color: rgba(0, 20, 47);}/*background: url(texture.jpg); }*/
     #menu     { margin: 0 0; display: inline-block; vertical-align: top;}
     #menu p   { margin: 0 0; text-align: center; color: rgb(0, 20, 47);}
@@ -53,7 +53,7 @@
     #brForm { display: block; content: ""; }
 
     input     { margin: 0 0; position: relative; top: -1em;}
-    #panel { background-color: #F8F8F8; display: flex; justify-content: start; flex-direction: column;}
+    #panel { background-color: rgb(255, 255, 255); display: flex; justify-content: start; flex-direction: column;}
 
     #player{width: 40%; display: inline-block; text-align: center; padding: 5% 0 5% 0;}
     #score{width: 40%; display: inline-block; text-align: center; padding: 5% 0 5% 0;}
@@ -117,15 +117,19 @@
     <div id="login">
       <form>
         <label for="nickname">nick:</label><br id="brForm">
-        <input type="text" id="nickname" nickname="nickname" maxlength="9"><br id="brForm"><br id="brForm">
+        <input type="text" id="nickname" nickname="nickname" maxlength="8"><br id="brForm"><br id="brForm">
         <label for="email">e-mail:</label><br id="brForm">
         <input type="text" id="email" email="email" maxlength="50"><br id="brForm">
+
+        <label for="universidade">universidade:</label><br id="brForm">
+        <input type="text" id="universidade" universidade="universidade" maxlength="8"><br id="brForm">
+
         <button id="btnGo" onclick="tryToEnter(event)">go!</button>
 
         <div id="checkTermsDiv">
           <br id="brForm">
           <input type="checkbox" id="checkTermsInput" name="checkTerms" checked>
-          <label id="textTerms" for="termos"> I agree with <a href="https://tetrix.vtex.com/wp-content/uploads/2020/04/REGULAMENTO-CONCURSO-TETRIX-2020.pdf">this terms</a> .</label>
+          <label id="textTerms" for="termos"> Eu aceito <a href="https://tetrix.vtex.com/wp-content/uploads/2020/04/REGULAMENTO-CONCURSO-TETRIX-2020.pdf">estes termos</a> .</label>
         </div>
       </form>
     </div>
@@ -154,20 +158,20 @@
     </div>
 
     <canvas id="canvas">
-      Sorry, this example cannot be run because your browser does not support the &lt;canvas&gt; element
+      Desculpe, seu navegador não suporta o elemento &lt;canvas&gt;
     </canvas>  
     
     <div id="howToDiv">
-      <label id="howToText">how to play: swipe up, down, left or right, or use the arrows &nbsp &nbsp <i class="arrow up"></i> &nbsp &nbsp <i class="arrow down"></i> &nbsp &nbsp <i class="arrow left"></i> &nbsp &nbsp <i class="arrow right"></i> </label>
+      <label id="howToText">como jogar: arraste para cima, baixo, esquerda ou direita, ou use as setas &nbsp &nbsp <i class="arrow up"></i> &nbsp &nbsp <i class="arrow down"></i> &nbsp &nbsp <i class="arrow left"></i> &nbsp &nbsp <i class="arrow right"></i> </label>
     </div>
   </div>
   
   <audio id="song" loop="loop">
     <source src="song.mp3" type="audio/mp3">
-      Your browser does not support the audio element.
+      Seu navegador não suporta elemento de áudio.
     </audio>
 
-    <button id="btnSong" onclick="changeAudio()">play song</button><p></p>
+    <button id="btnSong" onclick="changeAudio()">tocar música</button><p></p>
 
     <button id="btnWpp" type="submit" onclick="wppShare()">
       <a target="_blank" href='https://pt.stackoverflow.com'></a>
@@ -236,7 +240,8 @@
 
     // Dados atuais do jogador
     var nickname,
-        email;
+        email,
+        universidade;
     // Array no servidor:
     var usersData = [];
 
@@ -484,13 +489,21 @@
       } 
       for(var i = 0; i < 20 && i < usersData.length; i++){
         let item = document.createElement('p');
+
+        let item_span_uni = document.createElement('span');
+        item_span_uni.style = "width: 30%; display: inline-block; text-align: center;";
+
         let item_span_player = document.createElement('span');
-        item_span_player.style = "width: 40%; display: inline-block; text-align: center;";
+        item_span_player.style = "width: 30%; display: inline-block; text-align: center;";
         
         let item_span_score = document.createElement('span');
-        item_span_score.style = "width: 40%; display: inline-block; text-align: center;";
+        item_span_score.style = "width: 30%; display: inline-block; text-align: center;";
+
+        item_span_uni.textContent = usersData[i].universidade;
         item_span_player.textContent = usersData[i].nick;
         item_span_score.textContent = usersData[i].score;
+
+        item.appendChild(item_span_uni);
         item.appendChild(item_span_player);
         item.appendChild(item_span_score);
         lista.appendChild(item);
@@ -516,6 +529,7 @@
 
       usersData = Object.keys(score).map(key => {
         return {
+        universidade: score[key].universidade,
         nick: score[key].user,
         score: score[key].score
       }});
@@ -531,7 +545,8 @@
         body: JSON.stringify({
           user: user,
           password: password,
-          score: score
+          score: score,
+          universidade: universidade
         }),
       });
 
@@ -545,6 +560,8 @@
 
       nickname = document.getElementById("nickname").value;
       email = document.getElementById("email").value.toLowerCase();
+      universidade = document.getElementById("universidade").value;
+
       check = document.getElementById("checkTermsInput").checked;
       if(nickname == ""){
         alert("Enter your nickname");
@@ -563,7 +580,7 @@
       await fetchScore()
 
       if (resp.status == 200){
-        usersData.push({nick: nickname, password: email, score: 0})
+        usersData.push({universidade: universidade,nick: nickname, password: email, score: 0})
         var player_name = document.getElementById('player');
         player_name.innerHTML = nickname;
         ev.preventDefault();
@@ -585,27 +602,27 @@
       if(songIsPlaying){
         song.pause();
         songIsPlaying = false;
-        btnSong.innerHTML = 'play song';
+        btnSong.innerHTML = 'tocar música';
       }
       else{
         song.play();
         song.volume = 0.3;
         songIsPlaying = true;
-        btnSong.innerHTML = 'pause song';
+        btnSong.innerHTML = 'parar música';
       }
     }
 
     function pauseAudio() {
       song.pause();
       songIsPlaying = false;
-      btnSong.innerHTML = 'play song';
+      btnSong.innerHTML = 'tocar música';
     }
 
     function playAudio() {
       song.play();
       song.volume = 0.3;
       songIsPlaying = true;
-      btnSong.innerHTML = 'pause song';
+      btnSong.innerHTML = 'parar música';
     }
 
     //-------------------------------------------------------------------------
@@ -613,7 +630,7 @@
     //-------------------------------------------------------------------------
 
     async function saveFinalScore(){
-      await saveScore(nickname, email, score)
+      await saveScore(universidade, nickname, email, score)
       await fetchScore()
       setVisualScore();
     }
