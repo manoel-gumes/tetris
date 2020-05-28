@@ -548,7 +548,7 @@
     }
 
     function checkPassword(user, email) {
-      return fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/login', {
+      return fetch('https://tetrix--storecomponents.myvtex.com/_v/tetrix/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -562,7 +562,7 @@
     }
 
     async function fetchScore() {
-      const score = await (await fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/score')).json();
+      const score = await (await fetch('https://tetrix--storecomponents.myvtex.com/_v/tetrix/score')).json();
 
       usersData = Object.keys(score).map(key => {
         return {
@@ -574,7 +574,7 @@
     }
 
     async function saveScore(universidade, nickname, email, score) {
-      const resp = await fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/score', {
+      const resp = await fetch('https://tetrix--storecomponents.myvtex.com/_v/tetrix/score', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -627,8 +627,8 @@
         play();
       }
       else {
-        const error = await resp.text()
-        alert(error);
+        const error = await resp.json()
+        alert(error.message);
       }
     }
 
