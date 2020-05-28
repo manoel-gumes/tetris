@@ -547,7 +547,7 @@
 
     }
 
-    function checkPassword(user, password) {
+    function checkPassword(user, email) {
       return fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/login', {
         method: 'POST',
         headers: {
@@ -555,7 +555,8 @@
         },
         body: JSON.stringify({
           user: user,
-          password: password
+          email: email,
+          universidade: universidade
         }),
       });
     }
@@ -572,15 +573,15 @@
       updateRanking()
     }
 
-    async function saveScore(user, password, score) {
+    async function saveScore(universidade, nickname, email, score) {
       const resp = await fetch('https://rodrigoorem--storecomponents.myvtex.com/_v/tetrix/score', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          user: user,
-          password: password,
+          user: nickname,
+          email: email,
           score: score,
           universidade: universidade
         }),
@@ -616,7 +617,10 @@
       await fetchScore()
 
       if (resp.status == 200){
-        usersData.push({universidade: universidade,nick: nickname, password: email, score: 0})
+        if (usersData.find(user => user.nick === nickname) === undefined) {
+          usersData.push({universidade: universidade, nick: nickname, email: email, score: 0})
+          updateRanking()
+        }
         var player_name = document.getElementById('player');
         player_name.innerHTML = nickname;
         ev.preventDefault();
@@ -624,10 +628,7 @@
       }
       else {
         const error = await resp.text()
-        if (error == 'incorrect password') {
-          alert('Nick is already in use. Please choose another');
-          return;
-        }
+        alert(error);
       }
     }
 
