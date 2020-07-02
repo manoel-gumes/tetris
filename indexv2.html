@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<!-- HTML5 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" charset="utf-8"/>
+<html>
+<head>
+  <title>Tetris</title>
+  <style>
+    body      { font-family: Impact, sans-serif; background-color: rgba(0, 20, 47,0.9);}
+    #tetris   { margin: 1em auto; background-color: rgb(255, 255, 255); }
+    #canvas   { display: inline-block; vertical-align: top; background-color: rgba(0, 20, 47);border: 0.1em solid rgb(248, 24, 97);}
+    #menu     { margin: 0 0; display: inline-block; vertical-align: top;}
+    #menu p   { margin: 0 0; text-align: center; color: rgb(0, 20, 47);}
+    #menu p a { text-decoration: none; color: rgb(0, 20, 47); }
+    #upcoming { display: block; margin: 0 auto; background-color: rgba(0, 20, 47); background-size: 100%; background-image: url(background2.png);}
+    #score    { color: rgb(248, 24, 97); font-weight: bold; vertical-align: middle;}
+
+    #login    { display: flex; justify-content: center; align-items: center; text-align: center;
+              color: rgb(248, 24, 97); position: absolute; background-color: rgba(0, 20, 47,0.9); }
+
+    #gameOver { display: flex; justify-content: center; align-items: center; text-align: center;
+              color: rgb(248, 24, 97); position: absolute; background-color: rgba(0, 20, 47,0.9);}
+
+    #btnGo    { background-color: rgb(248, 24, 97);
+              border: none;
+              color: rgb(0, 20, 47);
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-family: Impact, sans-serif;
+              border-radius: 4px;}
+
+    #btnSong {display: block;
+              margin-left: auto;
+              margin-right: auto;
+              border: none;
+              background-color: rgba(93, 93, 93, 0.274);
+              color: rgb(0, 20, 47);
+              text-align: center;
+              font-size: 12px;
+              font-family: Impact, sans-serif;
+              border-radius: 4px;}
+
+    #btnWpp {display: block;
+              background: transparent;
+              margin-left: auto;
+              margin-right: auto;
+              border: none;
+              padding: 0 0;
+              height: 40px;
+              width: 40px;}
+
+    #wppIcon {position: relative;
+            height: 100%;
+            width: 100%;}
+
+    #brForm { display: block; content: ""; }
+
+    input     { margin: 0 0; position: relative; top: -1em;}
+    #panel { background-color: rgb(255, 255, 255); display: flex; justify-content: start; flex-direction: column;}
+
+    #player{width: 40%; display: inline-block; text-align: center; padding: 5% 0 5% 0;}
+    #score{width: 40%; display: inline-block; text-align: center; padding: 5% 0 5% 0;}
+
+    #ranking{padding-top: 0%; height: 70%; font-size: 0.5em;}
+
+    #textTerms {
+      vertical-align: middle;
+      position: relative;
+
+      *overflow: hidden;
+    }
+    #checkTermsInput {
+      vertical-align: middle;
+      position: relative;
+      top: 0.1em;
+      *overflow: hidden;
+    }
+    
+    #howToText {
+      color: rgb(136, 136, 136);
+    }
+    #howToDiv{
+      background-color: rgba(0, 20, 47, 0);
+    }
+
+    #desafieText {
+      color: rgb(136, 136, 136);
+      text-justify: center;
+    }
+    #desafieDiv {
+      display: inline-flexbox; justify-content: center; align-items: center; text-align: center;
+    }
+
+    .arrow {
+      border: solid rgb(136, 136, 136);
+      border-width: 0 0.2em 0.2em 0;
+      display: inline-block;
+      padding: 0.2em;
+      vertical-align: middle;
+    }
+
+    .right { transform: rotate(-45deg); -webkit-transform: rotate(-45deg);}
+    .left { transform: rotate(135deg); -webkit-transform: rotate(135deg);}
+    .up { transform: rotate(-135deg); -webkit-transform: rotate(-135deg); }
+    .down { transform: rotate(45deg); -webkit-transform: rotate(45deg); }
+
+    #form{height: 70%;}
+
+    #canvas{height: fit-content; overflow: auto;}
+    #tetris{height: fit-content; overflow: auto;}
+    #body{height: fit-content; width: 100%;}
+/*
+/*    @media screen and (min-width:     0px) and (min-height:     0px)  { #tetris { width: 210.0px; } #login { width: 210.0px; height: 210.0px;} #gameOver { width: 210.0px; height: 210.0px;} #menu { width: 100.0px; height: 210.0px; } #upcoming { width:  50.0px; height:  50.0px; } #canvas { width: 100.0px; height: 200.0px; } #panel { width: 100.0px; height: 150.0px; } #btnGo{padding:  5.0px 10.0px;font-size: 16.0px;} label{font-size: 16.0px;} #textTerms{font-size:  8.0px;} #desafieText{font-size:  8.0px;} #panel{font-size:  8.0px;} #howToText{font-size: 0.32em;} #brForm{margin-top: 10.0px;}} /* 10px chunks */
+/*    @media screen and (min-width: 210.0px) and (min-height: 210.0px)  { #tetris { width: 210.0px; } #login { width: 210.0px; height: 210.0px;} #gameOver { width: 210.0px; height: 210.0px;} #menu { width: 100.0px; height: 210.0px; } #upcoming { width:  50.0px; height:  50.0px; } #canvas { width: 100.0px; height: 200.0px; } #panel { width: 100.0px; height: 150.0px; } #btnGo{padding:  5.0px 10.0px;font-size: 16.0px;} label{font-size: 16.0px;} #textTerms{font-size:  8.0px;} #desafieText{font-size:  8.0px;} #panel{font-size:  8.0px;} #howToText{font-size: 0.32em;} #brForm{margin-top: 10.0px;}} /* 10px chunks */
+/*   @media screen and (min-width: 241.6px) and (min-height: 241.6px)  { #tetris { width: 241.6px; } #login { width: 241.6px; height: 241.6px;} #gameOver { width: 241.6px; height: 241.6px;} #menu { width: 115.8px; height: 241.6px; } #upcoming { width:  57.9px; height:  57.9px; } #canvas { width: 115.8px; height: 231.6px; } #panel { width: 115.8px; height: 173.7px; } #btnGo{padding:  5.3px 10.5px;font-size: 16.8px;} label{font-size: 16.8px;} #textTerms{font-size:  8.4px;} #desafieText{font-size:  8.4px;} #panel{font-size:  9.3px;} #howToText{font-size: 0.37em;} #brForm{margin-top: 10.4px;}} /* 10px chunks */
+/*    @media screen and (min-width: 273.2px) and (min-height: 273.2px)  { #tetris { width: 273.2px; } #login { width: 273.2px; height: 273.2px;} #gameOver { width: 273.2px; height: 273.2px;} #menu { width: 131.6px; height: 273.2px; } #upcoming { width:  65.8px; height:  65.8px; } #canvas { width: 131.6px; height: 263.2px; } #panel { width: 131.6px; height: 197.4px; } #btnGo{padding:  5.5px 11.1px;font-size: 17.7px;} label{font-size: 17.7px;} #textTerms{font-size: 8.85px;} #desafieText{font-size: 8.85px;} #panel{font-size: 10.5px;} #howToText{font-size: 0.42em;} #brForm{margin-top: 10.8px;}} /* 10px chunks */
+/*    @media screen and (min-width: 304.7px) and (min-height: 304.7px)  { #tetris { width: 304.7px; } #login { width: 304.7px; height: 304.7px;} #gameOver { width: 304.7px; height: 304.7px;} #menu { width: 147.4px; height: 304.7px; } #upcoming { width:  73.7px; height:  73.7px; } #canvas { width: 147.4px; height: 294.7px; } #panel { width: 147.4px; height: 221.1px; } #btnGo{padding:  5.8px 11.6px;font-size: 18.5px;} label{font-size: 18.5px;} #textTerms{font-size: 9.25px;} #desafieText{font-size: 9.25px;} #panel{font-size: 11.8px;} #howToText{font-size: 0.47em;} #brForm{margin-top: 11.2px;}} /* 10px chunks */
+/*    @media screen and (min-width: 336.3px) and (min-height: 336.3px)  { #tetris { width: 336.3px; } #login { width: 336.3px; height: 336.3px;} #gameOver { width: 336.3px; height: 336.3px;} #menu { width: 163.2px; height: 336.3px; } #upcoming { width:  81.6px; height:  81.6px; } #canvas { width: 163.2px; height: 326.3px; } #panel { width: 163.2px; height: 244.7px; } #btnGo{padding:  6.1px 12.1px;font-size: 19.4px;} label{font-size: 19.4px;} #textTerms{font-size:  9.7px;} #desafieText{font-size:  9.7px;} #panel{font-size: 13.1px;} #howToText{font-size: 0.52em;} #brForm{margin-top: 11.6px;}} /* 10px chunks */
+/*    @media screen and (min-width: 367.9px) and (min-height: 367.9px)  { #tetris { width: 367.9px; } #login { width: 367.9px; height: 367.9px;} #gameOver { width: 367.9px; height: 367.9px;} #menu { width: 178.9px; height: 367.9px; } #upcoming { width:  89.5px; height:  89.5px; } #canvas { width: 178.9px; height: 357.9px; } #panel { width: 178.9px; height: 268.4px; } #btnGo{padding:  6.3px 12.6px;font-size: 20.2px;} label{font-size: 20.2px;} #textTerms{font-size: 10.1px;} #desafieText{font-size: 10.1px;} #panel{font-size: 14.3px;} #howToText{font-size: 0.57em;} #brForm{margin-top: 12.0px;}} /* 10px chunks */
+/*    @media screen and (min-width: 399.5px) and (min-height: 399.5px)  { #tetris { width: 399.5px; } #login { width: 399.5px; height: 399.5px;} #gameOver { width: 399.5px; height: 399.5px;} #menu { width: 194.7px; height: 399.5px; } #upcoming { width:  97.4px; height:  97.4px; } #canvas { width: 194.7px; height: 389.5px; } #panel { width: 194.7px; height: 292.1px; } #btnGo{padding:  6.6px 13.2px;font-size: 21.1px;} label{font-size: 21.1px;} #textTerms{font-size:10.55px;} #desafieText{font-size:10.55px;} #panel{font-size: 15.6px;} #howToText{font-size: 0.62em;} #brForm{margin-top: 12.4px;}} /* 10px chunks */
+/*    @media screen and (min-width: 431.1px) and (min-height: 431.1px)  { #tetris { width: 431.1px; } #login { width: 431.1px; height: 431.1px;} #gameOver { width: 431.1px; height: 431.1px;} #menu { width: 210.5px; height: 431.1px; } #upcoming { width: 105.3px; height: 105.3px; } #canvas { width: 210.5px; height: 421.1px; } #panel { width: 210.5px; height: 315.8px; } #btnGo{padding:  6.8px 13.7px;font-size: 21.9px;} label{font-size: 21.9px;} #textTerms{font-size:10.95px;} #desafieText{font-size:10.95px;} #panel{font-size: 16.8px;} #howToText{font-size: 0.67em;} #brForm{margin-top: 12.8px;}} /* 10px chunks */
+/*    @media screen and (min-width: 462.6px) and (min-height: 462.6px)  { #tetris { width: 462.6px; } #login { width: 462.6px; height: 462.6px;} #gameOver { width: 462.6px; height: 462.6px;} #menu { width: 226.3px; height: 462.6px; } #upcoming { width: 113.2px; height: 113.2px; } #canvas { width: 226.3px; height: 452.6px; } #panel { width: 226.3px; height: 339.5px; } #btnGo{padding:  7.1px 14.2px;font-size: 22.7px;} label{font-size: 22.7px;} #textTerms{font-size:11.35px;} #desafieText{font-size:11.35px;} #panel{font-size: 18.1px;} #howToText{font-size: 0.72em;} #brForm{margin-top: 13.2px;}} /* 10px chunks */
+/*    @media screen and (min-width: 494.2px) and (min-height: 494.2px)  { #tetris { width: 494.2px; } #login { width: 494.2px; height: 494.2px;} #gameOver { width: 494.2px; height: 494.2px;} #menu { width: 242.1px; height: 494.2px; } #upcoming { width: 121.1px; height: 121.1px; } #canvas { width: 242.1px; height: 484.2px; } #panel { width: 242.1px; height: 363.2px; } #btnGo{padding:  7.4px 14.7px;font-size: 23.6px;} label{font-size: 23.6px;} #textTerms{font-size: 11.8px;} #desafieText{font-size: 11.8px;} #panel{font-size: 19.4px;} #howToText{font-size: 0.77em;} #brForm{margin-top: 13.6px;}} /* 10px chunks */
+/*    @media screen and (min-width: 525.8px) and (min-height: 525.8px)  { #tetris { width: 525.8px; } #login { width: 525.8px; height: 525.8px;} #gameOver { width: 525.8px; height: 525.8px;} #menu { width: 257.9px; height: 525.8px; } #upcoming { width: 128.9px; height: 128.9px; } #canvas { width: 257.9px; height: 515.8px; } #panel { width: 257.9px; height: 386.8px; } #btnGo{padding:  7.6px 15.3px;font-size: 24.4px;} label{font-size: 24.4px;} #textTerms{font-size: 12.2px;} #desafieText{font-size: 12.2px;} #panel{font-size: 20.6px;} #howToText{font-size: 0.83em;} #brForm{margin-top: 13.9px;}} /* 10px chunks */
+/*    @media screen and (min-width: 557.4px) and (min-height: 557.4px)  { #tetris { width: 557.4px; } #login { width: 557.4px; height: 557.4px;} #gameOver { width: 557.4px; height: 557.4px;} #menu { width: 273.7px; height: 557.4px; } #upcoming { width: 136.8px; height: 136.8px; } #canvas { width: 273.7px; height: 547.4px; } #panel { width: 273.7px; height: 410.5px; } #btnGo{padding:  7.9px 15.8px;font-size: 25.3px;} label{font-size: 25.3px;} #textTerms{font-size:12.65px;} #desafieText{font-size:12.65px;} #panel{font-size: 21.9px;} #howToText{font-size: 0.88em;} #brForm{margin-top: 14.3px;}} /* 10px chunks */
+/*    @media screen and (min-width: 588.9px) and (min-height: 588.9px)  { #tetris { width: 588.9px; } #login { width: 588.9px; height: 588.9px;} #gameOver { width: 588.9px; height: 588.9px;} #menu { width: 289.5px; height: 588.9px; } #upcoming { width: 144.7px; height: 144.7px; } #canvas { width: 289.5px; height: 578.9px; } #panel { width: 289.5px; height: 434.2px; } #btnGo{padding:  8.2px 16.3px;font-size: 26.1px;} label{font-size: 26.1px;} #textTerms{font-size:13.05px;} #desafieText{font-size:13.05px;} #panel{font-size: 23.2px;} #howToText{font-size: 0.93em;} #brForm{margin-top: 14.7px;}} /* 10px chunks */
+/*    @media screen and (min-width: 620.5px) and (min-height: 620.5px)  { #tetris { width: 620.5px; } #login { width: 620.5px; height: 620.5px;} #gameOver { width: 620.5px; height: 620.5px;} #menu { width: 305.3px; height: 620.5px; } #upcoming { width: 152.6px; height: 152.6px; } #canvas { width: 305.3px; height: 610.5px; } #panel { width: 305.3px; height: 457.9px; } #btnGo{padding:  8.4px 16.8px;font-size: 26.9px;} label{font-size: 26.9px;} #textTerms{font-size:13.45px;} #desafieText{font-size:13.45px;} #panel{font-size: 24.4px;} #howToText{font-size: 0.98em;} #brForm{margin-top: 15.1px;}} /* 10px chunks */
+/*    @media screen and (min-width: 652.1px) and (min-height: 652.1px)  { #tetris { width: 652.1px; } #login { width: 652.1px; height: 652.1px;} #gameOver { width: 652.1px; height: 652.1px;} #menu { width: 321.1px; height: 652.1px; } #upcoming { width: 160.5px; height: 160.5px; } #canvas { width: 321.1px; height: 642.1px; } #panel { width: 321.1px; height: 481.6px; } #btnGo{padding:  8.7px 17.4px;font-size: 27.8px;} label{font-size: 27.8px;} #textTerms{font-size: 13.9px;} #desafieText{font-size: 13.9px;} #panel{font-size: 25.7px;} #howToText{font-size: 1.03em;} #brForm{margin-top: 15.5px;}} /* 10px chunks */
+/*    @media screen and (min-width: 683.7px) and (min-height: 683.7px)  { #tetris { width: 683.7px; } #login { width: 683.7px; height: 683.7px;} #gameOver { width: 683.7px; height: 683.7px;} #menu { width: 336.8px; height: 683.7px; } #upcoming { width: 168.4px; height: 168.4px; } #canvas { width: 336.8px; height: 673.7px; } #panel { width: 336.8px; height: 505.3px; } #btnGo{padding:  8.9px 17.9px;font-size: 28.6px;} label{font-size: 28.6px;} #textTerms{font-size: 14.3px;} #desafieText{font-size: 14.3px;} #panel{font-size: 26.9px;} #howToText{font-size: 1.08em;} #brForm{margin-top: 15.9px;}} /* 10px chunks */
+/*    @media screen and (min-width: 715.3px) and (min-height: 715.3px)  { #tetris { width: 715.3px; } #login { width: 715.3px; height: 715.3px;} #gameOver { width: 715.3px; height: 715.3px;} #menu { width: 352.6px; height: 715.3px; } #upcoming { width: 176.3px; height: 176.3px; } #canvas { width: 352.6px; height: 705.3px; } #panel { width: 352.6px; height: 528.9px; } #btnGo{padding:  9.2px 18.4px;font-size: 29.5px;} label{font-size: 29.5px;} #textTerms{font-size:14.75px;} #desafieText{font-size:14.75px;} #panel{font-size: 28.2px;} #howToText{font-size: 1.13em;} #brForm{margin-top: 16.3px;}} /* 10px chunks */
+/*    @media screen and (min-width: 746.8px) and (min-height: 746.8px)  { #tetris { width: 746.8px; } #login { width: 746.8px; height: 746.8px;} #gameOver { width: 746.8px; height: 746.8px;} #menu { width: 368.4px; height: 746.8px; } #upcoming { width: 184.2px; height: 184.2px; } #canvas { width: 368.4px; height: 736.8px; } #panel { width: 368.4px; height: 552.6px; } #btnGo{padding:  9.5px 18.9px;font-size: 30.3px;} label{font-size: 30.3px;} #textTerms{font-size:15.15px;} #desafieText{font-size:15.15px;} #panel{font-size: 29.5px;} #howToText{font-size: 1.18em;} #brForm{margin-top: 16.7px;}} /* 10px chunks */
+/*    @media screen and (min-width: 778.4px) and (min-height: 778.4px)  { #tetris { width: 778.4px; } #login { width: 778.4px; height: 778.4px;} #gameOver { width: 778.4px; height: 778.4px;} #menu { width: 384.2px; height: 778.4px; } #upcoming { width: 192.1px; height: 192.1px; } #canvas { width: 384.2px; height: 768.4px; } #panel { width: 384.2px; height: 576.3px; } #btnGo{padding:  9.7px 19.5px;font-size: 31.2px;} label{font-size: 31.2px;} #textTerms{font-size: 15.6px;} #desafieText{font-size: 15.6px;} #panel{font-size: 30.7px;} #howToText{font-size: 1.23em;} #brForm{margin-top: 17.1px;}} /* 10px chunks */
+/*    @media screen and (min-width: 810.0px) and (min-height: 810.0px)  { #tetris { width: 810.0px; } #login { width: 810.0px; height: 810.0px;} #gameOver { width: 810.0px; height: 810.0px;} #menu { width: 400.0px; height: 810.0px; } #upcoming { width: 200.0px; height: 200.0px; } #canvas { width: 400.0px; height: 800.0px; } #panel { width: 400.0px; height: 600.0px; } #btnGo{padding: 10.0px 20.0px;font-size: 32.0px;} label{font-size: 32.0px;} #textTerms{font-size: 16.0px;} #desafieText{font-size: 16.0px;} #panel{font-size: 32.0px;} #howToText{font-size: 1.28em;} #brForm{margin-top: 17.5px;}} /* 40px chunks */
+/*  
+*/
+  </style>
+</head>
+
+<body id="body">
+  <div id="tetris">
+    <div id="login">
+      <form id="form">
+        <label for="nickname">nick:</label><br id="brForm">
+        <input type="text" id="nickname" nickname="nickname" maxlength="8"><br id="brForm"><br id="brForm">
+        <label for="email">e-mail:</label><br id="brForm">
+        <input type="text" id="email" email="email" maxlength="50"><br id="brForm">
+        
+        <label for="universidade">universidade:</label><br id="brForm">
+        <input type="text" id="universidade" universidade="universidade" maxlength="8"><br id="brForm">
+
+        <button id="btnGo" onclick="tryToEnter(event)">go!</button>
+        <div id="checkTermsDiv">
+          <br id="brForm">
+          <p>
+            <input type="checkbox" id="checkTermsInput" name="checkTerms" checked>
+            <label id="textTerms" for="termos"> eu aceito <a href="https://tetrix.vtex.com/wp-content/uploads/2020/04/REGULAMENTO-CONCURSO-TETRIX-2020.pdf">estes termos</a> .</label>
+          </p>
+        </div>
+      </form>
+    </div>
+    
+    <div id="gameOver">
+      <div>
+        <label>vc já se inscreveu?</label>
+        <br id="brForm">
+        <button id="btnGo" onclick="location.href='https://tetrix2020.typeform.com/to/R4hDEy'">inscreva-se!</button>
+        <br id="brForm">
+        <br>
+        <button id="btnGo" onclick="play()">jogar novamente</button>
+      </div>
+    </div>
+    
+    <!--
+      <div id="gameOver">
+        <label id="gameOverText">vc já se inscreveu? </label>
+      </div>
+  -->
+
+    <div id="menu">
+      <p><canvas id="upcoming"></canvas></p>
+      <div id="panel">
+        <p>
+        <span id="player"> </span>
+        <span id="score"> </span>
+        </p>
+        <p>
+          <span>top 20<br></span>
+        </p>
+        <div id="ranking">
+        </div>
+
+      </div>
+
+    </div>
+
+    <canvas id="canvas">
+      Desculpe, seu navegador não suporta o elemento &lt;canvas&gt;
+    </canvas>  
+    <!--
+    <div id="howToDiv">
+      <label id="howToText">como jogar: arraste para os lados, para baixo e para cima, ou use as setas. </label>
+    </div>
+  -->
+  </div>
+  
+  <audio id="song" loop="loop">
+    <source src="song.mp3" type="audio/mp3">
+      Seu navegador não suporta elemento de áudio.
+    </audio>
+
+    <button id="btnSong" onclick="changeAudio()">tocar música</button><p></p>
+    <div id="desafieDiv">
+      <br>
+      <p>
+        <label id="desafieText">desafie os seus amigos a jogarem também!</label>
+      </p>
+      <button id="btnWpp" type="submit" onclick="wppShare()">
+        <a target="_blank" href='https://pt.stackoverflow.com'></a>
+        <img id="wppIcon" src="wpp_icon.png" />
+     </button>
+    </div>
+
+  <script>
+
+    //-------------------------------------------------------------------------
+    // base helper methods
+    //-------------------------------------------------------------------------
+
+    function get(id)        { return document.getElementById(id);  }
+    function hide(id)       { get(id).style.visibility = 'hidden'; }
+    function show(id)       { get(id).style.visibility = null;     }
+    function html(id, html) { get(id).innerHTML = html;            }
+
+    function timestamp()           { return new Date().getTime();                             }
+    function random(min, max)      { return (min + (Math.random() * (max - min)));            }
+    function randomChoice(choices) { return choices[Math.round(random(0, choices.length-1))]; }
+
+    if (!window.requestAnimationFrame) { // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+      window.requestAnimationFrame = window.webkitRequestAnimationFrame ||
+                                     window.mozRequestAnimationFrame    ||
+                                     window.oRequestAnimationFrame      ||
+                                     window.msRequestAnimationFrame     ||
+                                     function(callback, element) {
+                                       window.setTimeout(callback, 1000 / 60);
+                                     }
+    }
+
+    //-------------------------------------------------------------------------
+    // game constants
+    //-------------------------------------------------------------------------
+
+    var KEY     = { ESC: 27, SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, ENTER: 13},
+        DIR     = { UP: 0, RIGHT: 1, DOWN: 2, LEFT: 3, MIN: 0, MAX: 3 },
+        //stats   = new Stats(),
+        canvas  = get('canvas'),
+        ctx     = canvas.getContext('2d'),
+        ucanvas = get('upcoming'),
+        uctx    = ucanvas.getContext('2d'),
+        speed   = { start: 0.6, decrement: 0.005, min: 0.1 }, // how long before piece drops by 1 row (seconds)
+        nx      = 10, // width of tetris court (in blocks)
+        ny      = 20, // height of tetris court (in blocks)
+        nu      = 5;  // width/height of upcoming preview (in blocks)
+
+    //-------------------------------------------------------------------------
+    // game variables (initialized during reset)
+    //-------------------------------------------------------------------------
+
+    var dx, dy,        // pixel size of a single tetris block
+        blocks,        // 2 dimensional array (nx*ny) representing tetris court - either empty block or occupied by a 'piece'
+        actions,       // queue of user actions (inputs)
+        playing,       // true|false - game is in progress
+        dt,            // time since starting this game
+        dtDown = 0,
+        current,       // the current piece
+        next,          // the next piece
+        score,         // the current score
+        vscore,        // the currently displayed score (it catches up to score in small chunks - like a spinning slot machine)
+        rows,          // number of completed rows in the current game
+        step,         // how long before current piece drops by 1 row        
+        downFactor = 1,
+        sideFactor = 0;
+
+    // Dados atuais do jogador
+    var nickname,
+        email,
+        universidade;
+    // Array no servidor:
+    var usersData = [];
+
+    var songIsPlaying = false;
+
+    function wppShare(){
+      window.open('https://api.whatsapp.com/send?text=Já pensou viajar o mundo sem pagar nada? Participe do TETRIX: https://tetrix.vtex.com/');
+    }
+
+    //-------------------------------------------------------------------------
+    // tetris pieces
+    //
+    // blocks: each element represents a rotation of the piece (0, 90, 180, 270)
+    //         each element is a 16 bit integer where the 16 bits represent
+    //         a 4x4 set of blocks, e.g. j.blocks[0] = 0x44C0
+    //
+    //             0100 = 0x4 << 3 = 0x4000
+    //             0100 = 0x4 << 2 = 0x0400
+    //             1100 = 0xC << 1 = 0x00C0
+    //             0000 = 0x0 << 0 = 0x0000
+    //                               ------
+    //                               0x44C0
+    //
+    //-------------------------------------------------------------------------
+
+    var i = { size: 4, blocks: [0x0F00, 0x2222, 0x00F0, 0x4444]};
+    var j = { size: 3, blocks: [0x44C0, 0x8E00, 0x6440, 0x0E20]};
+    var l = { size: 3, blocks: [0x4460, 0x0E80, 0xC440, 0x2E00]};
+    var o = { size: 2, blocks: [0xCC00, 0xCC00, 0xCC00, 0xCC00]};
+    var s = { size: 3, blocks: [0x06C0, 0x8C40, 0x6C00, 0x4620]};
+    var t = { size: 3, blocks: [0x0E40, 0x4C40, 0x4E00, 0x4640]};
+    var z = { size: 3, blocks: [0x0C60, 0x4C80, 0xC600, 0x2640]};
+
+    //------------------------------------------------
+    // do the bit manipulation and iterate through each
+    // occupied block (x,y) for a given piece
+    //------------------------------------------------
+    function eachblock(type, x, y, dir, fn) {
+      var bit, result, row = 0, col = 0, blocks = type.blocks[dir];
+      for(bit = 0x8000 ; bit > 0 ; bit = bit >> 1) {
+        if (blocks & bit) {
+          fn(x + col, y + row);
+        }
+        if (++col === 4) {
+          col = 0;
+          ++row;
+        }
+      }
+    }
+
+    //-----------------------------------------------------
+    // check if a piece can fit into a position in the grid
+    //-----------------------------------------------------
+    function occupied(type, x, y, dir) {
+      var result = false
+      eachblock(type, x, y, dir, function(x, y) {
+        if ((x < 0) || (x >= nx) || (y < 0) || (y >= ny) || getBlock(x,y))
+          result = true;
+      });
+      return result;
+    }
+
+    function unoccupied(type, x, y, dir) {
+      return !occupied(type, x, y, dir);
+    }
+
+    //-----------------------------------------
+    // start with 4 instances of each piece and
+    // pick randomly until the 'bag is empty'
+    //-----------------------------------------
+    var pieces = [];
+    function randomPiece() {
+      if (pieces.length == 0)
+        pieces = [i,i,i,i,j,j,j,j,l,l,l,l,o,o,o,o,s,s,s,s,t,t,t,t,z,z,z,z];
+      var type = pieces.splice(random(0, pieces.length-1), 1)[0];
+      return { type: type, dir: DIR.UP, x: Math.round(random(0, nx - type.size)), y: 0 };
+    }
+
+
+    //-------------------------------------------------------------------------
+    // GAME LOOP
+    //-------------------------------------------------------------------------
+
+    async function run() {
+
+      //showStats(); // initialize FPS counter
+      addEvents(); // attach keydown and resize events
+
+      var last = now = timestamp();
+      function frame() {
+        now = timestamp();
+        update(Math.min(1, (now - last) / 1000.0)); // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
+        draw();
+        last = now;
+        requestAnimationFrame(frame, canvas);
+      }
+
+      resize(); // setup all our sizing information
+      reset();  // reset the per-game variables
+      frame();  // start the first frame
+
+      await fetchScore()
+    }
+
+    function swipedetect(el, callback){
+
+      var touchsurface = el,
+      swipedir,
+      startX,
+      startY,
+      distX,
+      distY,
+      threshold = 40, //required min distance traveled to be considered swipe
+      restraint = 125, // maximum distance allowed at the same time in perpendicular direction
+      allowedTime = 300, // maximum time allowed to travel that distance
+      elapsedTime,
+      startTime,
+      handleswipe = callback || function(swipedir){}
+
+      touchsurface.addEventListener('touchstart', function(e){
+        var touchobj = e.changedTouches[0]
+        swipedir = 'none'
+        dist = 0
+        startX = touchobj.pageX
+        startY = touchobj.pageY
+        startTime = new Date().getTime() // record time when finger first makes contact with surface
+        e.preventDefault()
+      }, false)
+
+      touchsurface.addEventListener('touchmove', function(e){
+        e.preventDefault() // prevent scrolling when inside DIV
+        var touchobj = e.changedTouches[0]
+
+      }, false)
+
+      touchsurface.addEventListener('touchend', function(e){
+        //sideFactor = 0;
+        var touchobj = e.changedTouches[0];
+        distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+        distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime; // get time elapsed
+        if (elapsedTime <= allowedTime){ // first condition for awipe met
+            //if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+            //    swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+            //}
+            //else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+            
+            if (sideFactor == 0 && Math.abs(distY) <= restraint){
+              sideFactor = parseInt(8*distX/touchobj.target.width);
+              if(Math.abs(sideFactor) >= 5){
+                sideFactor = 3*sideFactor/Math.abs(sideFactor);
+              }
+              else if (Math.abs(sideFactor) >= 3){
+                sideFactor = 2*sideFactor/Math.abs(sideFactor);
+              }
+              else if (Math.abs(sideFactor) >= 1){
+                sideFactor = sideFactor/Math.abs(sideFactor);
+              }
+              else{
+                sideFactor = 0;
+              }
+
+            }
+            
+            if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+                if (distY < 0){
+                  swipedir = 'up';
+                }
+                else{
+                  swipedir = 'down';
+                  if (distY >= threshold){
+                    downFactor = 2;
+                  }
+                  else{
+                    downFactor = 1;
+                  }
+                }
+            }
+
+        }
+        handleswipe(swipedir)
+        e.preventDefault()
+      }, false)
+    }
+
+    function addEvents() {
+      document.addEventListener('keydown', keydown, false);
+      var el = document.getElementById('canvas');
+        swipedetect(el, function(swipedir){
+          switch(swipedir) {
+            case "left":  move(DIR.LEFT);  break;
+            case "right": move(DIR.RIGHT); break;
+            case "up":    rotate();        break;
+            case "down":  drop();          break;
+          }
+        });
+      window.addEventListener('resize', resize, false);
+    }
+
+    function resize(event) {
+      canvas.width   = canvas.clientWidth;  // set canvas logical size equal to its physical size
+      canvas.height  = canvas.clientHeight; // (ditto)
+      ucanvas.width  = ucanvas.clientWidth;
+      ucanvas.height = ucanvas.clientHeight;
+      dx = canvas.width  / nx; // pixel size of a single tetris block
+      dy = canvas.height / ny; // (ditto)
+      invalidate();
+      invalidateNext();
+    }
+
+    function keydown(ev) {
+      var handled = false;
+      if (playing) {
+        switch(ev.keyCode) {
+          case KEY.LEFT:   actions.push(DIR.LEFT);  handled = true; break;
+          case KEY.RIGHT:  actions.push(DIR.RIGHT); handled = true; break;
+          case KEY.UP:     actions.push(DIR.UP);    handled = true; break;
+          case KEY.DOWN:   actions.push(DIR.DOWN);  handled = true; break;
+          case KEY.ESC:    lose();                  handled = true; break;
+        }
+      }
+      else if (ev.keyCode == KEY.ENTER){
+        tryToEnter(ev);
+        handled = true;
+      }
+
+        // Verificar se existe esse nome
+        //    Se existe nome, validar se senha está correta
+        //        Se senha estiver errada, informar e solicitar senha novamente
+        //    Se não existe nome, criar novo usuário
+
+
+      if (handled)
+        ev.preventDefault(); // prevent arrow keys from scrolling the page (supported in IE9+ and all other browsers)
+    }
+
+    function updateRanking(){
+      //let ordered = usersData.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0));
+
+      let lista = document.getElementById('ranking');
+      let first = lista.firstElementChild; 
+      while (first) { 
+        first.remove(); 
+        first = lista.firstElementChild; 
+      } 
+      for(var i = 0; i < 20 && i < usersData.length; i++){
+        let item = document.createElement('p');
+
+        let item_span_uni = document.createElement('span');
+        item_span_uni.style = "width: 30%; display: inline-block; text-align: center;";
+
+        let item_span_player = document.createElement('span');
+        item_span_player.style = "width: 30%; display: inline-block; text-align: center;";
+        
+        let item_span_score = document.createElement('span');
+        item_span_score.style = "width: 30%; display: inline-block; text-align: center;";
+
+        item_span_uni.textContent = usersData[i].universidade;
+        item_span_player.textContent = usersData[i].nick;
+        item_span_score.textContent = usersData[i].score;
+
+        item.appendChild(item_span_player);
+        item.appendChild(item_span_uni);
+        item.appendChild(item_span_score);
+        lista.appendChild(item);
+      }
+
+    }
+
+    function checkPassword(user, email) {
+      return fetch('https://tetrix--storecomponents.myvtex.com/_v/tetrix/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user: user,
+          email: email,
+          universidade: universidade
+        }),
+      });
+    }
+
+    async function fetchScore() {
+      const score = await (await fetch('https://tetrix--storecomponents.myvtex.com/_v/tetrix/score')).json();
+
+      usersData = Object.keys(score).map(key => {
+        return {
+        universidade: score[key].universidade,
+        nick: score[key].user,
+        score: score[key].score
+      }});
+      updateRanking()
+    }
+
+    async function saveScore(universidade, nickname, email, score) {
+      const resp = await fetch('https://tetrix--storecomponents.myvtex.com/_v/tetrix/score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user: nickname,
+          email: email,
+          score: score,
+          universidade: universidade
+        }),
+      });
+
+      if (resp.status != 200) {
+        alert('There was an error on sending this score.')
+      }
+    }
+
+    async function tryToEnter(ev){
+      ev.preventDefault()
+
+      nickname = document.getElementById("nickname").value;
+      email = document.getElementById("email").value.toLowerCase();
+      universidade = document.getElementById("universidade").value;
+
+      check = document.getElementById("checkTermsInput").checked;
+      if(nickname == ""){
+        alert("Enter your nickname");
+        return;
+      }
+      else if(email == ""){
+        alert("Enter your e-mail");
+        return;
+      }
+      else if (check == false){
+        alert("You need to accept the terms");
+        return;
+      }
+
+      const resp = await checkPassword(nickname, email);
+      await fetchScore()
+
+      if (resp.status == 200){
+        if (usersData.find(user => user.nick === nickname) === undefined) {
+          usersData.push({universidade: universidade, nick: nickname, email: email, score: 0})
+          updateRanking()
+        }
+        var player_name = document.getElementById('player');
+        player_name.innerHTML = nickname;
+        ev.preventDefault();
+        play();
+      }
+      else {
+        const error = await resp.json()
+        alert(error.message);
+      }
+    }
+
+    var song = document.getElementById("song");
+    var btnSong = document.getElementById("btnSong");
+
+    function changeAudio() {
+      if(songIsPlaying){
+        song.pause();
+        songIsPlaying = false;
+        btnSong.innerHTML = 'tocar música';
+      }
+      else{
+        song.play();
+        song.volume = 0.3;
+        songIsPlaying = true;
+        btnSong.innerHTML = 'parar música';
+      }
+    }
+
+    function pauseAudio() {
+      song.pause();
+      songIsPlaying = false;
+      btnSong.innerHTML = 'tocar música';
+    }
+
+    function playAudio() {
+      song.play();
+      song.volume = 0.3;
+      songIsPlaying = true;
+      btnSong.innerHTML = 'parar música';
+    }
+
+    //-------------------------------------------------------------------------
+    // GAME LOGIC
+    //-------------------------------------------------------------------------
+
+    async function saveFinalScore(){
+      await saveScore(universidade, nickname, email, score)
+      await fetchScore()
+      setVisualScore();
+    }
+
+    function saveIntermediaryScore() {
+      const user = usersData.find(x => x.nick === nickname)
+      if(score > user.score){
+        user.score = score
+        updateRanking()
+      }
+    }
+
+    function play() {
+      hide('login');
+      hide('gameOver');
+      //show('howToText');
+      reset();
+
+      let body_element = document.getElementById('body');
+      body_element.style = "background-color: white;";
+
+      //let howToDiv_element = document.getElementById('howToDiv');
+      //howToDiv_element.style = "background-color: white;";
+
+      playing = true;
+      playAudio();
+    }
+    function lose() {
+      saveFinalScore();
+      //hide('howToText');
+      show('gameOver');
+      
+      let body_element = document.getElementById('body');
+      body_element.style = "background-color: rgba(0, 20, 47,0.9);";
+
+      //let howToDiv_element = document.getElementById('howToDiv');
+      //howToDiv_element.style = "background-color: rgba(0, 20, 47,0.9);";
+
+      playing = false;
+      pauseAudio();
+    }
+
+    function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
+    function setScore(n)            { score = n; setVisualScore(n);  }
+    function addScore(n)            { score = score + n; saveIntermediaryScore(); updateRanking(); }
+    function clearScore()           { setScore(0); }
+    function clearRows()            { setRows(0); }
+    function setRows(n)             { rows = n; step = Math.max(speed.min, speed.start - (speed.decrement*rows)); invalidateRows(); }
+    function addRows(n)             { setRows(rows + n); }
+    function getBlock(x,y)          { return (blocks && blocks[x] ? blocks[x][y] : null); }
+    function setBlock(x,y,type)     { blocks[x] = blocks[x] || []; blocks[x][y] = type; invalidate(); }
+    function clearBlocks()          { blocks = []; invalidate(); }
+    function clearActions()         { actions = []; }
+    function setCurrentPiece(piece) { current = piece || randomPiece(); invalidate();     }
+    function setNextPiece(piece)    { next    = piece || randomPiece(); invalidateNext(); }
+
+    function reset() {
+      dt = 0;
+      clearActions();
+      clearBlocks();
+      clearRows();
+      clearScore();
+      setCurrentPiece(next);
+      setNextPiece();
+    }
+
+    function update(idt) {
+      if (playing) {
+        if (vscore < score)
+          setVisualScore(vscore + 1);
+        handle(actions.shift());
+        dt = dt + idt;
+        dtDown = dtDown + idt;
+        if (downFactor == 1 && dt > step) {
+          dt = dt - step;
+          drop();
+        }
+        else if (downFactor > 1) {
+          drop();
+        }
+        if(sideFactor >= 1){
+          move(DIR.RIGHT);
+          sideFactor -= 1;
+        }
+        else if(sideFactor <= -1){
+          move(DIR.LEFT);
+          sideFactor += 1;
+        }
+      }
+    }
+
+    function handle(action) {
+      switch(action) {
+        case DIR.LEFT:  move(DIR.LEFT);  break;
+        case DIR.RIGHT: move(DIR.RIGHT); break;
+        case DIR.UP:    rotate();        break;
+        case DIR.DOWN:  drop();          break;
+      }
+    }
+
+    function move(dir) {
+      var x = current.x, y = current.y;
+      switch(dir) {
+        case DIR.RIGHT: x = x + 1; break;
+        case DIR.LEFT:  x = x - 1; break;
+        case DIR.DOWN:  y = y + 1;  break;
+
+      }
+
+      if (unoccupied(current.type, x, y, current.dir)) {
+        current.x = x;
+        current.y = y;
+
+        invalidate();
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+
+    function rotate() {
+      var newdir = (current.dir == DIR.MAX ? DIR.MIN : current.dir + 1);
+      if (unoccupied(current.type, current.x, current.y, newdir)) {
+        current.dir = newdir;
+        invalidate();
+      }
+    }
+
+    function drop() {
+      
+      if (!move(DIR.DOWN)) {
+        downFactor = 1;
+        sideFactor = 0;
+        addScore(10);
+        dropPiece();
+        removeLines();
+        setCurrentPiece(next);
+        setNextPiece(randomPiece());
+        clearActions();
+        if (occupied(current.type, current.x, current.y, current.dir)) {
+          lose();
+        }
+      }
+    }
+
+    function dropPiece() {
+      eachblock(current.type, current.x, current.y, current.dir, function(x, y) {
+        setBlock(x, y, current.type);
+      });
+    }
+
+    function removeLines() {
+      var x, y, complete, n = 0;
+      for(y = ny ; y > 0 ; --y) {
+        complete = true;
+        for(x = 0 ; x < nx ; ++x) {
+          if (!getBlock(x, y))
+            complete = false;
+        }
+        if (complete) {
+          removeLine(y);
+          y = y + 1; // recheck same line
+          n++;
+        }
+      }
+      if (n > 0) {
+        addRows(n);
+        addScore(100*Math.pow(2,n-1)); // 1: 100, 2: 200, 3: 400, 4: 800
+      }
+    }
+
+    function removeLine(n) {
+      var x, y;
+      for(y = n ; y >= 0 ; --y) {
+        for(x = 0 ; x < nx ; ++x)
+          setBlock(x, y, (y == 0) ? null : getBlock(x, y-1));
+      }
+    }
+
+    //-------------------------------------------------------------------------
+    // RENDERING
+    //-------------------------------------------------------------------------
+
+    var invalid = {};
+
+    function invalidate()         { invalid.court  = true; }
+    function invalidateNext()     { invalid.next   = true; }
+    function invalidateScore()    { invalid.score  = true; }
+    function invalidateRows()     { invalid.rows   = true; }
+
+    function draw() {
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.translate(0.5, 0.5); // for crisp 1px black lines
+      drawCourt();
+      drawNext();
+      drawScore();
+      //drawRows();
+      ctx.restore();
+    }
+
+    function drawCourt() {
+      if (invalid.court) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (playing)
+          drawPiece(ctx, current.type, current.x, current.y, current.dir);
+        var x, y, block;
+        for(y = 0 ; y < ny ; y++) {
+          for (x = 0 ; x < nx ; x++) {
+            if (block = getBlock(x,y))
+              drawBlock(ctx, x, y, block.color);
+          }
+        }
+        ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
+        invalid.court = false;
+      }
+    }
+
+    function drawNext() {
+      if (invalid.next) {
+        var padding = (nu - next.type.size) / 2; // half-arsed attempt at centering next piece display
+        uctx.save();
+        uctx.translate(0.5, 0.5);
+        uctx.clearRect(0, 0, nu*dx, nu*dy);
+        drawPiece(uctx, next.type, padding, padding, next.dir);
+        uctx.strokeStyle = 'rgb(0, 20, 47)';
+        uctx.strokeRect(0, 0, nu*dx - 1, nu*dy - 1);
+        uctx.restore();
+        invalid.next = false;
+      }
+    }
+
+    function drawScore() {
+      if (invalid.score) {
+        html('score', ("00000" + Math.floor(vscore)).slice(-5));
+        invalid.score = false;
+      }
+    }
+
+    function drawRows() {
+      if (invalid.rows) {
+        html('rows', rows);
+        invalid.rows = false;
+      }
+    }
+
+    function drawPiece(ctx, type, x, y, dir) {
+      eachblock(type, x, y, dir, function(x, y) {
+        drawBlock(ctx, x, y, type.color);
+      });
+    }
+
+    function drawBlock(ctx, x, y, color) {
+      ctx.fillStyle = 'rgb(248, 24, 97)';
+      ctx.fillRect(x*dx, y*dy, dx*0.95, dy*0.95);
+      //ctx.strokeRect(x*dx, y*dy, dx, dy)
+    }
+
+    //-------------------------------------------------------------------------
+    // FINALLY, lets run the game
+    //-------------------------------------------------------------------------
+
+    //hide('howToText');
+    hide('gameOver');
+    run();
+
+  </script>
+
+</body>
+</html>
