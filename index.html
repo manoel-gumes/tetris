@@ -180,50 +180,80 @@
       background: transparent;
     }
     #tetris{
-        min-width: 70vh;
-        height: 100vh;
-        width: 100vw;
-        max-width: 100vh;
-        display: inline-block;
-        text-align: justify;
-        white-space: nowrap; 
-        background-image: url("background_menu.png");
-        background-size: 100%;
-      }
+      height: min(100vh, 150vw);
+      width: 100vw;
+      max-width: 100vh;
+      display: inline-block;
+      text-align: justify;
+      white-space: nowrap; 
+      background-image: url("background_menu.png");
+      background-size: 100%;
+    }
       
-      #menu{
-        height: 100vh;
-        width: calc(100% - 50vh);
-        display: inline-block;
-        background-color: rgba(255, 255, 250, 0);
-      }
+    #menu{
+      height: min(100vh, 150vw);
+      width: calc(100% - 50vh);
+      display: inline-block;
+      background-color: rgba(255, 255, 250, 0);
+    }
       
+    #canvasDiv{
+      height: min(100vh, 150vw);
+      width: 50vh;
+      max-width: min(50vh, 80vw);
+      vertical-align: top;
+      float: right;
+    }
+    
     #canvas{
-        height: 100vh;
-        width: 50vh;
-        display: inline-block;
-        position: relative;
-        vertical-align: top;
-        background-color: rgba(0, 20, 47, 0.85);
-        border-radius: 1%;
+      height: min(100vh, 150vw);
+      width: 50vh;
+      max-width: min(50vh, 80vw);
+      display: inline-block;
+      position: relative;
+      vertical-align: top;
+      background-color: rgba(0, 20, 47, 0.85);
+    }
+
+    #placar{
+      height: min(20vh, min(29vw, calc(100vw - min(50vh, 80vw))));
+      width: 100%;
+      max-width: min(50vh, 80vw);
+      float: right;
+      position: relative;
+      vertical-align: top;
+      background-color: rgba(0, 20, 47, 0.85);
+
+      display: flex;
+      justify-content: center;
+      font-size: max(min(4vw, 13px), 1.5vw);
+      color: white;
+    }
+
+    #player{
+      display: flex;
+    }
+    
+    #score{
+      display: flex;
     }
 
     #submenu{
-        
-        width: 100%;
-        height: 20vh;
-        display: inline-block;
-        justify-content: center;
-        text-align: center;
-        background-color: rgba(255, 255, 250, 0);
+      width: 100%;
+      height: min(20vh, min(29vw, calc(100vw - min(50vh, 80vw))));
+      display: inline-block;
+      justify-content: center;
+      text-align: center;
+      background-color: rgba(255, 255, 250, 0);
     }
 
     #upcoming{
-        height: 20vh;
-        width: 20vh;
-        display: inline-block;
-        background-color: rgba(0, 20, 47,0.8);
-        border-radius: 3%;
+      height: min(20vh, min(29vw, calc(100vw - min(50vh, 80vw))));
+      width: min(20vh, min(29vw, calc(100vw - min(50vh, 80vw))));
+      position: relative;
+      z-index: 5;
+      display: inline-block;
+      background-color: rgba(0, 20, 47,0.8);
     }
 
     #painel{
@@ -294,8 +324,6 @@
 </head>
 
 <body id="body">
-  
-  <!--
 
   <div id="login">
     <form id="form">
@@ -314,8 +342,6 @@
     </form>
   </div>
 
--->
-
   <div id="tetris">
 
     <div id="menu">
@@ -324,10 +350,15 @@
         </div>
             
     </div>
-    <canvas id="canvas">
-      Desculpe, seu navegador não suporta o elemento &lt;canvas&gt;
-    </canvas>
-
+    <div id="canvasDiv">
+      <div id="placar">
+        <span id="player"> </span>
+        <span id="score"> </span>
+      </div>
+      <canvas id="canvas">
+        Desculpe, seu navegador não suporta o elemento &lt;canvas&gt;
+      </canvas>
+    </div>
 
   </div>
 
@@ -354,9 +385,6 @@
   </div>
 
   <div id="painel">
-    
-      <span id="player"> </span>
-      <span id="score"> </span>
 
       <div id="ranking">
 
@@ -373,8 +401,7 @@
 <!--
   <div id="painel">
     <p>
-      <span id="player"> </span>
-      <span id="score"> </span>
+
       </p>
       <p>
         <span>top 20<br></span>
