@@ -9,9 +9,12 @@
         margin: 0px 0px;
         display: flex;
         justify-content: center;
+
+        font-family: sans-serif;
     }
 
     #login{
+      z-index: 10;
       height: 100%;
       width: 100%;
       position: absolute;
@@ -23,7 +26,6 @@
     }
 
     #form{
-      z-index: 10;
       width: 20em;
       height: 22.74em;
 
@@ -38,6 +40,8 @@
       justify-content: center;
 
       background-image: url(background_login.png);
+
+      
     }
 
 
@@ -140,10 +144,8 @@
     
 		label.css-label {
       background-image:url(checkbox.png);
-      
-      
-      /*background-size: min(2vw, 8%);*/
-      background-size: max(min(5.324vw, 17.3px), 2vw);
+
+      background-size: max(min(5.324vw, 18.4px), 2.1vw);
 
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
@@ -221,21 +223,33 @@
       max-width: min(50vh, 80vw);
       float: right;
       position: relative;
-      vertical-align: top;
       background-color: rgba(0, 20, 47, 0.85);
 
       display: flex;
       justify-content: center;
-      font-size: max(min(4vw, 13px), 1.5vw);
-      color: white;
+      font-size: max(min(6vw, 19.5px), 1.5vw);
+      color: gainsboro;
+
+      z-index: 8;
+
+      vertical-align: middle;
     }
 
     #player{
-      display: flex;
+      display: inline-block;
+      width: 50%;
+      height: auto;
+      text-align: center;
+      vertical-align: middle;
+      padding-top: calc(min(20vh, min(29vw, calc(100vw - min(50vh, 80vw))))*0.5 - max(min(6vw, 19.5px), 1.5vw)*0.5);
     }
     
     #score{
-      display: flex;
+      display: inline-block;
+      width: 50%;
+      height: auto;
+      text-align: center;
+      padding-top: calc(min(20vh, min(29vw, calc(100vw - min(50vh, 80vw))))*0.5 - max(min(6vw, 19.5px), 1.5vw)*0.5);
     }
 
     #submenu{
@@ -257,14 +271,18 @@
     }
 
     #painel{
-      height: 0vh;
-      width: 0vw;
+      width: 100vw;
+      /*height: min(100vh, 150vw);*/
+      width: 100vw;
       max-width: 100vh;
-      display: inline-block;
-      text-align: justify;
-      white-space: nowrap; 
-      background-color: rosybrown;
-      background-size: 100%;
+      
+      position: absolute;
+      z-index: -10;
+      padding-top: min(100vh, 150vw);
+
+      text-align: center;
+      /*white-space: nowrap;*/
+      background-color: transparent;
     }
 
     #gameOver{
@@ -275,10 +293,12 @@
       align-items: center;
       justify-content: center;
       background-color: rgba(0, 20, 47,0.9);
+
+      z-index: 10;
     }
 
     #gameOverText{
-      font-size: max(min(8vw, 26px), 3vw);
+      font-size: max(min(8vw, 26px), 2vw);
       display: inline-block;
       color: white;
       margin-top: 15%;
@@ -324,7 +344,6 @@
 </head>
 
 <body id="body">
-
   <div id="login">
     <form id="form">
 
@@ -341,7 +360,6 @@
 
     </form>
   </div>
-
   <div id="tetris">
 
     <div id="menu">
@@ -367,7 +385,7 @@
 
       <label id="gameOverText">VOCÊ JÁ SE INSCREVEU?</label>
       
-      <button type="submit" id="btnGameOver" onclick="location.href='https://tetrix2020.typeform.com/to/R4hDEy'">
+      <button type="submit" id="btnGameOver" onclick="inscreva(event)">
         <img src="btn_se_inscreva.png" id="btnImg" height="100%" width="100%"/>
       </button>
 
@@ -385,19 +403,19 @@
   </div>
 
   <div id="painel">
+    <p>
+      <span>TOP 20<br></span>
+    </p>
+    <div id="ranking"></div>
 
-      <div id="ranking">
+    <audio id="song" loop="loop">
 
-  </div>
-
-
-  <audio id="song" loop="loop">
     <source src="song.mp3" type="audio/mp3">
       Seu navegador não suporta elemento de áudio.
     </audio>
 
     <button id="btnSong" onclick="changeAudio()"></button><p></p>
-    </div>
+  </div>
 <!--
   <div id="painel">
     <p>
@@ -497,6 +515,10 @@
   var usersData = [];
 
   var songIsPlaying = false;
+
+  function inscreva(){
+    window.open('https://tetrix2020.typeform.com/to/R4hDEy');
+  }
 
   function wppShare(){
     window.open('https://api.whatsapp.com/send?text=Já pensou viajar o mundo sem pagar nada? Participe do TETRIX: https://tetrix.vtex.com/');
@@ -1108,8 +1130,7 @@
       uctx.save();
       uctx.translate(0.5, 0.5);
       uctx.clearRect(0, 0, nu*dx, nu*dy);
-      console.log(document.getElementById('upcoming').width);
-      drawPiece(uctx, next.type, padding, padding, next.dir, 2*dx/document.getElementById('upcoming').width);
+      drawPiece(uctx, next.type, padding, padding, next.dir, ((ucanvas.width/canvas.width)+(ucanvas.height/canvas.height)));
       uctx.strokeStyle = 'rgb(0, 20, 47)';
       uctx.strokeRect(0, 0, nu*dx - 1, nu*dy - 1);
       uctx.restore();
@@ -1140,9 +1161,9 @@
   function drawBlock(ctx, x, y, color, fator) {
     ctx.fillStyle = 'rgb(248, 24, 97)';
     if (fator != 1)
-      ctx.fillRect(0.8*dy+fator*x*dx, 0.8*dy+fator*y*dy, fator*dx*0.95, fator*dy*0.95);
+      ctx.fillRect(fator*(x+0.75)*dx, fator*(y+1)*dy, fator*dx*0.95, fator*dy*0.95);
     else
-      ctx.fillRect(fator*x*dx, fator*y*dy, fator*dx*0.95, fator*dy*0.95);
+      ctx.fillRect(x*dx, y*dy, dx*0.95, dy*0.95);
 
     //ctx.strokeRect(x*dx, y*dy, dx, dy)
   }
