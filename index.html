@@ -26,8 +26,10 @@
       z-index: 10;
       width: 20em;
       height: 22.74em;
-      min-width: 40vw;
-      min-height: 45.48vw;
+
+      min-width: 10%;
+      min-height: 21.2522%;
+
       background-size: contain;
       background-repeat: no-repeat;
 
@@ -36,8 +38,6 @@
       justify-content: center;
 
       background-image: url(background_login.png);
-
-      
     }
 
 
@@ -205,7 +205,7 @@
         position: relative;
         vertical-align: top;
         background-color: rgba(0, 20, 47, 0.85);
-        border-radius: 3%;
+        border-radius: 1%;
     }
 
     #submenu{
@@ -226,8 +226,8 @@
     }
 
     #painel{
-      height: 100vh;
-      width: 100vw;
+      height: 0vh;
+      width: 0vw;
       max-width: 100vh;
       display: inline-block;
       text-align: justify;
@@ -244,6 +244,49 @@
       align-items: center;
       justify-content: center;
       background-color: rgba(0, 20, 47,0.9);
+    }
+
+    #gameOverText{
+      font-size: max(min(8vw, 26px), 3vw);
+      display: inline-block;
+      color: white;
+      margin-top: 15%;
+      margin-left: 15%;
+    }
+
+    #desafieText{
+      font-size: max(min(4vw, 13px), 1.5vw);
+      display: inline-block;
+      color: white;
+      margin-top: 5%;
+      margin-left: 15%;
+      margin-right: 15%;
+    }
+
+    #btnGameOver{
+      display: inline-block;
+      height: 15vw;
+      max-height: 12%;
+      margin-left: 15%;
+      padding-left:0;
+      margin-right: 45%;
+      border: 0;
+      margin-top: 5%;
+      background: transparent;
+    }
+
+    #btnWpp{
+      display: inline-block;
+      height: 10vw;
+      width: 10vw;
+      max-height: 9%;
+      max-width: 9%;
+      
+      margin-left: 15%;
+      padding-left:0;
+      border: 0;
+      margin-top: 5%;
+      background: transparent;
     }
 
   </style>
@@ -287,33 +330,76 @@
 
   <div id="gameOver">
     <form id="form">
-      <label>VOCÊ JÁ SE INSCREVEU?</label>
-      <button type="submit" id="btnGo" onclick="tryToEnter(event)">
+
+      <label id="gameOverText">VOCÊ JÁ SE INSCREVEU?</label>
+      
+      <button type="submit" id="btnGameOver" onclick="location.href='https://tetrix2020.typeform.com/to/R4hDEy'">
+        <img src="btn_se_inscreva.png" id="btnImg" height="100%" width="100%"/>
+      </button>
+
+      <button type="submit" id="btnGameOver" onclick="tryToEnter(event)">
         <img src="btn_jogar.png" id="btnImg" height="100%" width="100%"/>
       </button>
 
-      <button type="submit" id="btnGo" onclick="tryToEnter(event)">
-        <img src="btn_jogar.png" id="btnImg" height="100%" width="100%"/>
+      <label id="desafieText">DESAFIE OS SEUS AMIGOS A JOGAREM TAMBÉM!</label>
+
+      <button id="btnWpp" type="submit" onclick="wppShare()">
+        <img id="wppIcon" src="wpp_icon.png" height="100%"/>
       </button>
-
-      <div id="desafieDiv">
-
-        <label id="desafieText">desafie os seus amigos a jogarem também!</label>
-
-        <button id="btnWpp" type="submit" onclick="wppShare()">
-          <img id="wppIcon" src="wpp_icon.png" />
-       </button>
-      </div>
 
     </form>
   </div>
-<!--
+
   <div id="painel">
     
-  </div>
--->
+      <span id="player"> </span>
+      <span id="score"> </span>
 
+      <div id="ranking">
+
+  </div>
+
+
+  <audio id="song" loop="loop">
+    <source src="song.mp3" type="audio/mp3">
+      Seu navegador não suporta elemento de áudio.
+    </audio>
+
+    <button id="btnSong" onclick="changeAudio()"></button><p></p>
+    </div>
+<!--
+  <div id="painel">
+    <p>
+      <span id="player"> </span>
+      <span id="score"> </span>
+      </p>
+      <p>
+        <span>top 20<br></span>
+      </p>
+      <div id="ranking">
+      </div>
+  </div>
+
+
+  <audio id="song" loop="loop">
+    <source src="song.mp3" type="audio/mp3">
+      Seu navegador não suporta elemento de áudio.
+    </audio>
+
+    <button id="btnSong" onclick="changeAudio()">tocar música</button><p></p>
+    <div id="desafieDiv">
+      <br>
+      <p>
+        <label id="desafieText">desafie os seus amigos a jogarem também!</label>
+      </p>
+      <button id="btnWpp" type="submit" onclick="wppShare()">
+        <a target="_blank" href='https://pt.stackoverflow.com'></a>
+        <img id="wppIcon" src="wpp_icon.png" />
+     </button>
+    </div>
+-->
 <script>
+
 
   //-------------------------------------------------------------------------
   // base helper methods
@@ -973,12 +1059,12 @@
     if (invalid.court) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (playing)
-        drawPiece(ctx, current.type, current.x, current.y, current.dir);
+        drawPiece(ctx, current.type, current.x, current.y, current.dir, 1);
       var x, y, block;
       for(y = 0 ; y < ny ; y++) {
         for (x = 0 ; x < nx ; x++) {
           if (block = getBlock(x,y))
-            drawBlock(ctx, x, y, block.color);
+            drawBlock(ctx, x, y, block.color, 1);
         }
       }
       ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
@@ -992,7 +1078,8 @@
       uctx.save();
       uctx.translate(0.5, 0.5);
       uctx.clearRect(0, 0, nu*dx, nu*dy);
-      drawPiece(uctx, next.type, padding, padding, next.dir);
+      console.log(document.getElementById('upcoming').width);
+      drawPiece(uctx, next.type, padding, padding, next.dir, 2*dx/document.getElementById('upcoming').width);
       uctx.strokeStyle = 'rgb(0, 20, 47)';
       uctx.strokeRect(0, 0, nu*dx - 1, nu*dy - 1);
       uctx.restore();
@@ -1014,15 +1101,19 @@
     }
   }
 
-  function drawPiece(ctx, type, x, y, dir) {
+  function drawPiece(ctx, type, x, y, dir, fator) {
     eachblock(type, x, y, dir, function(x, y) {
-      drawBlock(ctx, x, y, type.color);
+      drawBlock(ctx, x, y, type.color, fator);
     });
   }
 
-  function drawBlock(ctx, x, y, color) {
+  function drawBlock(ctx, x, y, color, fator) {
     ctx.fillStyle = 'rgb(248, 24, 97)';
-    ctx.fillRect(x*dx, y*dy, dx*0.95, dy*0.95);
+    if (fator != 1)
+      ctx.fillRect(0.8*dy+fator*x*dx, 0.8*dy+fator*y*dy, fator*dx*0.95, fator*dy*0.95);
+    else
+      ctx.fillRect(fator*x*dx, fator*y*dy, fator*dx*0.95, fator*dy*0.95);
+
     //ctx.strokeRect(x*dx, y*dy, dx, dy)
   }
 
