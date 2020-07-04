@@ -288,11 +288,13 @@
 
       text-align: center;
       /*white-space: nowrap;*/
-      background-color: transparent;
+
+      background-image: url("background_top.png");
+      background-size: 100%;
     }
 
     #gameOver{
-      height: 100%;
+      height: min(100vh, 150vw);
       width: 100%;
       position: absolute;
       display: flex;
@@ -948,7 +950,6 @@
     show('gameOver');
     
     let body_element = document.getElementById('body');
-    body_element.style = "background-color: rgba(0, 20, 47,0.9);";
 
     //let howToDiv_element = document.getElementById('howToDiv');
     //howToDiv_element.style = "background-color: rgba(0, 20, 47,0.9);";
