@@ -50,7 +50,7 @@
       height: 10vw;
       max-height: 8%;
       width: 60%;
-      margin-top: 25%;
+      margin-top: 30%;
       margin-left: 15%;
       border: 0;
       border-radius: 5em;
@@ -179,7 +179,7 @@
       max-height: 12%;
       margin-left: 15%;
       padding-left:0;
-      margin-right: 45%;
+      margin-right: 50%;
       border: 0;
       margin-top: 5%;
       margin-bottom: 5%;
@@ -291,7 +291,7 @@
       text-align: center;
       /*white-space: nowrap;*/
 
-      background-image: url("background_top.png");
+      /*background-image: url("background_top.png");*/
       background-repeat: repeat-y;
       background-size: 100%;
 
@@ -333,7 +333,7 @@
       max-height: 12%;
       margin-left: 15%;
       padding-left:0;
-      margin-right: 45%;
+      margin-right: 50%;
       border: 0;
       margin-top: 5%;
       background: transparent;
@@ -373,9 +373,11 @@
       <input placeholder="Email" type="text" id="email" email="email" maxlength="50">
       <input placeholder="Universidade" type="text" id="universidade" universidade="universidade" maxlength="15">
 
+      <!--
       <input type="checkbox" name="checkTerms" id="checkboxG1" class="css-checkbox" checked/>
       <label for="checkboxG1" class="css-label"><a color="white" href="https://tetrix.vtex.com/wp-content/uploads/2020/04/REGULAMENTO-CONCURSO-TETRIX-2020.pdf">Concordo com  os termos.</a></label>
-  
+      -->
+
       <button type="submit" id="btnGo" onclick="tryToEnter(event)">
         <img src="btn_jogar.png" id="btnImg" height="100%" width="100%"/>
       </button>
@@ -423,8 +425,9 @@
 
     </form>
   </div>
-
   <div id="painel">
+    <br>
+    <br>
     <p>
       <span>TOP 50<br></span>
     </p>
@@ -858,7 +861,8 @@
     email = document.getElementById("email").value.toLowerCase();
     universidade = document.getElementById("universidade").value;
 
-    check = document.getElementById("checkboxG1").checked;
+    //check = document.getElementById("checkboxG1").checked;
+    check = true;
     if(nickname == ""){
       alert("Enter your nickname");
       return;
