@@ -372,14 +372,8 @@
       <input placeholder="Nome" type="text" id="nickname" nickname="nickname" maxlength="15">
       <input placeholder="Email" type="text" id="email" email="email" maxlength="50">
       <input placeholder="Universidade" type="text" id="universidade" universidade="universidade" maxlength="15">
-
-      <!--
-      <input type="checkbox" name="checkTerms" id="checkboxG1" class="css-checkbox" checked/>
-      <label for="checkboxG1" class="css-label"><a color="white" href="https://tetrix.vtex.com/wp-content/uploads/2020/04/REGULAMENTO-CONCURSO-TETRIX-2020.pdf">Concordo com  os termos.</a></label>
-      -->
-
       <button type="submit" id="btnGo" onclick="tryToEnter(event)">
-        <img src="btn_jogar.png" id="btnImg" height="100%" width="100%"/>
+        <img src="btn_jogar.png" id="btnImgJogar" height="100%" width="100%"/>
       </button>
 
     </form>
@@ -410,11 +404,11 @@
       <label id="gameOverText">VOCÊ JÁ SE INSCREVEU?</label>
       
       <button type="submit" id="btnGameOver" onclick="inscreva(event)">
-        <img src="btn_se_inscreva.png" id="btnImg" height="100%" width="100%"/>
+        <img src="btn_se_inscreva.png" id="btnImgInscreva" height="100%" width="100%"/>
       </button>
 
       <button type="submit" id="btnGameOver" onclick="tryToEnter(event)">
-        <img src="btn_jogar.png" id="btnImg" height="100%" width="100%"/>
+        <img src="btn_jogar.png" id="btnImgJogarGO" height="100%" width="100%"/>
       </button>
 
       <label id="desafieText">DESAFIE OS SEUS AMIGOS A JOGAREM TAMBÉM!</label>
@@ -441,37 +435,37 @@
 
     <button id="btnSong" onclick="changeAudio()"></button><p></p>
   </div>
-<!--
-  <div id="painel">
-    <p>
 
-      </p>
-      <p>
-        <span>top 20<br></span>
-      </p>
-      <div id="ranking">
-      </div>
-  </div>
-
-
-  <audio id="song" loop="loop">
-    <source src="song.mp3" type="audio/mp3">
-      Seu navegador não suporta elemento de áudio.
-    </audio>
-
-    <button id="btnSong" onclick="changeAudio()">tocar música</button><p></p>
-    <div id="desafieDiv">
-      <br>
-      <p>
-        <label id="desafieText">desafie os seus amigos a jogarem também!</label>
-      </p>
-      <button id="btnWpp" type="submit" onclick="wppShare()">
-        <a target="_blank" href='https://pt.stackoverflow.com'></a>
-        <img id="wppIcon" src="wpp_icon.png" />
-     </button>
-    </div>
--->
 <script>
+
+  var es = false;
+  function load_language(){
+    var url = window.location.href;
+    if(url.split("/")[url.split("/").length-1] == "es"){
+      es = true;
+      document.getElementById('nickname').placeholder="Nombre";
+      document.getElementById('universidade').placeholder="Universidad";
+      document.getElementById('btnImgJogar').src="btn_jogar_es.png";
+      document.getElementById('btnImgInscreva').src="btn_se_inscreva_es.png";
+      document.getElementById('btnImgJogarGO').src="btn_jogar_es.png";
+      document.getElementById('gameOverText').textContent="¿YA TE HAS INSCRITO?";
+      document.getElementById('desafieText').textContent="DESAFÍA A TUS AMIGOS A JUGAR TAMBIÉN!";
+    }
+  }
+
+  function inscreva(){
+    if(es)
+      window.open('https://www.desafiotetrix.com/es/typeform/');
+    else
+      window.open('https://tetrix2020.typeform.com/to/R4hDEy');
+  }
+
+  function wppShare(){
+    if(es)
+      window.open('https://api.whatsapp.com/send?text=¿Ha pensado alguna vez en viajar por el mundo sin pagar nada? Únete a TETRIX: https://www.desafiotetrix.com/es/');
+    else
+      window.open('https://api.whatsapp.com/send?text=Já pensou viajar o mundo sem pagar nada? Participe do TETRIX: https://www.desafiotetrix.com/');
+  }
 
 
   //-------------------------------------------------------------------------
@@ -487,7 +481,7 @@
   function random(min, max)      { return (min + (Math.random() * (max - min)));            }
   function randomChoice(choices) { return choices[Math.round(random(0, choices.length-1))]; }
 
-  if (!window.requestAnimationFrame) { // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+  if (!window.requestAnimationFrame) { 
     window.requestAnimationFrame = window.webkitRequestAnimationFrame ||
                                    window.mozRequestAnimationFrame    ||
                                    window.oRequestAnimationFrame      ||
@@ -540,14 +534,6 @@
   var usersData = [];
 
   var songIsPlaying = false;
-
-  function inscreva(){
-    window.open('https://tetrix2020.typeform.com/to/R4hDEy');
-  }
-
-  function wppShare(){
-    window.open('https://api.whatsapp.com/send?text=Já pensou viajar o mundo sem pagar nada? Participe do TETRIX: https://tetrix.vtex.com/');
-  }
 
   //-------------------------------------------------------------------------
   // tetris pieces
@@ -625,7 +611,6 @@
 
   async function run() {
 
-    //showStats(); // initialize FPS counter
     addEvents(); // attach keydown and resize events
 
     var last = now = timestamp();
@@ -766,12 +751,6 @@
       handled = true;
     }
 
-      // Verificar se existe esse nome
-      //    Se existe nome, validar se senha está correta
-      //        Se senha estiver errada, informar e solicitar senha novamente
-      //    Se não existe nome, criar novo usuário
-
-
     if (handled)
       ev.preventDefault(); // prevent arrow keys from scrolling the page (supported in IE9+ and all other browsers)
   }
@@ -865,6 +844,10 @@
     check = true;
     if(nickname == ""){
       alert("Enter your nickname");
+      return;
+    }
+    else if(universidade == ""){
+      alert("Enter your university");
       return;
     }
     else if(email == ""){
@@ -1198,6 +1181,7 @@
   //-------------------------------------------------------------------------
 
   //hide('howToText');
+  load_language();
   hide('gameOver');
   run();
 
