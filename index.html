@@ -438,11 +438,11 @@
 
 <script>
 
-  var es = false;
+  var language = "pt";
   function load_language(){
     var url = window.location.href;
     if(url.split("/")[url.split("/").length-1] == "?es"){
-      es = true;
+      language = "es";
       document.getElementById('nickname').placeholder="Nombre";
       document.getElementById('universidade').placeholder="Universidad";
       document.getElementById('btnImgJogar').src="btn_jogar_es.png";
@@ -451,18 +451,32 @@
       document.getElementById('gameOverText').textContent="¿YA TE HAS INSCRITO?";
       document.getElementById('desafieText').textContent="DESAFÍA A TUS AMIGOS A JUGAR TAMBIÉN!";
     }
+    else if (url.split("/")[url.split("/").length-1] == "?en"){
+      language = "en";
+      document.getElementById('nickname').placeholder="Name";
+      document.getElementById('universidade').placeholder="University";
+      document.getElementById('btnImgJogar').src="btn_jogar_en.png";
+      document.getElementById('btnImgInscreva').src="btn_se_inscreva_en.png";
+      document.getElementById('btnImgJogarGO').src="btn_jogar_en.png";
+      document.getElementById('gameOverText').textContent="ALREADY SUBSCRIBED?";
+      document.getElementById('desafieText').textContent="CHALLENGE YOUR FRIENDS TO PLAY TOO!";
+    }
   }
 
   function inscreva(){
-    if(es)
+    if(language == "es")
       window.open('https://www.desafiotetrix.com/es/typeform/');
+    else if(language == "en")
+      window.open('https://www.desafiotetrix.com/en/typeform/');
     else
-      window.open('https://tetrix2020.typeform.com/to/R4hDEy');
+      window.open('https://www.desafiotetrix.com/typeform/');
   }
 
   function wppShare(){
-    if(es)
+    if(language == "es")
       window.open('https://api.whatsapp.com/send?text=¿Ha pensado alguna vez en viajar por el mundo sin pagar nada? Únete a TETRIX: https://www.desafiotetrix.com/es/');
+    else if(language == "en")
+    window.open('https://api.whatsapp.com/send?text=Have you ever thought of traveling the world without paying anything? Join TETRIX: https://www.desafiotetrix.com/en/');
     else
       window.open('https://api.whatsapp.com/send?text=Já pensou viajar o mundo sem pagar nada? Participe do TETRIX: https://www.desafiotetrix.com/');
   }
